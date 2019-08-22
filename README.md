@@ -43,3 +43,15 @@ https://www.microsoft.com/developerblog/2016/05/26/creating-universal-windows-ap
 
 # c# react electron
 https://github.com/communityus/electron-demo
+Copy C# folder “core” into “release-builds\electron-demo-win32-ia32” and run the electron-demo.exe
+
+# desktop (all?) linux
+https://github.com/status-im/react-native-desktop
+https://github.com/kusti8/proton-native
+
+#mac
+https://github.com/ptmt/react-native-macos
+
+#win
+https://github.com/Microsoft/react-native-windows
+http://facebook.github.io/react-native/
