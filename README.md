@@ -1,6 +1,8 @@
 # Top Ideas
-https://github.com/kusti8/proton-native
-https://github.com/status-im/react-native-desktop
+```
+https://github.com/communityus/proton-native
+https://github.com/communityus/react-native-desktop
+```
 
 # Lacuna Web Client [![Stories in Ready](https://badge.waffle.io/plainblack/lacuna-web-client.png?label=ready&title=Ready)](https://waffle.io/plainblack/lacuna-web-client)
 
