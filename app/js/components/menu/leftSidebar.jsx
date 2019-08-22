@@ -5,7 +5,6 @@ var Reflux                  = require('reflux');
 
 var vex                     = require('js/vex');
 var util                    = require('js/util');
-var server                  = require('js/server');
 var $                       = require('js/shims/jquery');
 
 var LeftSidebarActions      = require('js/actions/menu/leftSidebar');
@@ -36,7 +35,7 @@ var SelfDestruct = React.createClass({
             EmpireRPCActions.requestEmpireRPCDisableSelfDestruct();
             return;
         }
-        
+
         vex.confirm(
             'Are you ABSOLUTELY sure you want to enable self destuct?  If enabled, your empire will be deleted after 24 hours.',
             EmpireRPCActions.requestEmpireRPCEnableSelfDestruct
@@ -203,6 +202,7 @@ var LeftSidebar = React.createClass({
                     <i className="rocket icon"></i>
                     About
                 </a>
+
                 <a className="item" onClick={function() {
                     LeftSidebarActions.hide();
                     WindowActions.windowAdd(SitterManagerWindow, 'sitter');
@@ -221,7 +221,7 @@ var LeftSidebar = React.createClass({
                 </a>
                 <a className="item" onClick={function() {
                     LeftSidebarActions.hide();
-                    WindowActions.windowAdd(ServerClock, 'serverclock')
+                    WindowActions.windowAdd(ServerClock, 'serverclock');
                 }}>
                     <i className="wait icon"></i>
                     Server Clock

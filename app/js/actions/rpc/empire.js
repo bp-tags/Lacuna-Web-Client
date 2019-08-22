@@ -1,8 +1,6 @@
 'use strict';
 
 var Reflux  = require('reflux');
-var Server  = require('js/server');
-var _       = require('lodash');
 
 var EmpireRPCActions = Reflux.createActions([
     'requestEmpireRPCLogin',
@@ -21,9 +19,9 @@ var EmpireRPCActions = Reflux.createActions([
     'successEmpireRPCGetInviteFriendUrl',
     'failureEmpireRPCGetInviteFriendUrl',
 
-    'requestEmpireRPCViewBoosts',
-    'successEmpireRPCViewBoosts',
-    'failureEmpireRPCViewBoosts',
+    'requestEmpireRPCGetBoosts',
+    'successEmpireRPCGetBoosts',
+    'failureEmpireRPCGetBoosts',
 
     'requestEmpireRPCViewAuthorizedSitters',
     'successEmpireRPCViewAuthorizedSitters',

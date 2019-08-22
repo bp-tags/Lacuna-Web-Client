@@ -1,23 +1,21 @@
 'use strict';
 
-var React                   = require('react');
-var Reflux                  = require('reflux');
+var React                = require('react');
+var Reflux               = require('reflux');
 
-var Draggable               = require('react-draggable');
+var WindowActions        = require('js/actions/window');
+var EmpireRPCActions     = require('js/actions/rpc/empire');
 
-var WindowActions           = require('js/actions/window');
-var EmpireRPCActions        = require('js/actions/rpc/empire');
+var SessionStore         = require('js/stores/session');
+var EmpireRPCStore       = require('js/stores/rpc/empire');
+var BoostsEmpireRPCStore = require('js/stores/rpc/empire/boosts');
 
-var SessionStore            = require('js/stores/session');
-var EmpireRPCStore          = require('js/stores/rpc/empire');
-var BoostsEmpireRPCStore    = require('js/stores/rpc/empire/boosts');
+var BoostsTab            = require('js/components/window/essentia/boostsTab');
+var GetEssentiaTab       = require('js/components/window/essentia/getEssentiaTab');
 
-var BoostsTab               = require('js/components/window/essentia/boostsTab');
-var GetEssentiaTab          = require('js/components/window/essentia/getEssentiaTab');
-
-var Tabber                  = require('js/components/tabber');
-var Tabs                    = Tabber.Tabs;
-var Tab                     = Tabber.Tab;
+var Tabber               = require('js/components/tabber');
+var Tabs                 = Tabber.Tabs;
+var Tab                  = Tabber.Tab;
 
 var Essentia = React.createClass({
     mixins : [
@@ -28,9 +26,9 @@ var Essentia = React.createClass({
 
     statics : {
         options : {
-            title   : 'Essentia',
-            width   : 600,
-            height  : 350
+            title  : 'Essentia',
+            width  : 600,
+            height : 350
         }
     },
 
@@ -41,9 +39,9 @@ var Essentia = React.createClass({
     render : function() {
         return (
             <Tabs>
-                <Tab title="Boosts" onSelect={EmpireRPCActions.requestEmpireRPCViewBoosts}>
-                    <BoostsTab 
-                        essentia={this.state.empireStore.essentia} 
+                <Tab title="Boosts" onSelect={EmpireRPCActions.requestEmpireRPCGetBoosts}>
+                    <BoostsTab
+                        essentia={this.state.empireStore.essentia}
                         exactEssentia={this.state.empireStore.exactEssentia}
                         boosts={this.state.boostsStore}
                     />
@@ -58,10 +56,3 @@ var Essentia = React.createClass({
 });
 
 module.exports = Essentia;
-
-
-
-
-
-
-

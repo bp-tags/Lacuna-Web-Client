@@ -59,3 +59,11 @@ gulp.task('dev-with-server', function(done) {
 gulp.task('lint', gulpTasks.lint);
 
 gulp.task('server', gulpTasks.server);
+
+gulp.task('deploy-copy-files', gulpTasks.deploy.copyFiles);
+
+gulp.task('deploy', function() {
+    runSequence(
+        'deploy-copy-files'
+    );
+});

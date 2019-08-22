@@ -2,22 +2,24 @@
 
 YAHOO.namespace('lacuna');
 
-var React               = require('react');
-var ReactDom            = require('react-dom');
-var _                   = require('lodash');
-var ReactTooltip        = require('react-tooltip');
+var React           = require('react');
+var ReactDom        = require('react-dom');
+var _               = require('lodash');
+var ReactTooltip    = require('react-tooltip');
 
-var KeyboardActions     = require('js/actions/keyboard');
-var MenuActions         = require('js/actions/menu');
-var SessionActions      = require('js/actions/session');
-var TickerActions       = require('js/actions/ticker');
-var UserActions         = require('js/actions/user');
-var WindowActions       = require('js/actions/window');
+var KeyboardActions = require('js/actions/keyboard');
+var MenuActions     = require('js/actions/menu');
+var SessionActions  = require('js/actions/session');
+var TickerActions   = require('js/actions/ticker');
+var UserActions     = require('js/actions/user');
+var WindowActions   = require('js/actions/window');
 
-var GameWindow          = require('js/components/gameWindow');
-var Captcha             = require('js/components/window/captcha');
+var GameWindow      = require('js/components/gameWindow');
+var Captcha         = require('js/components/window/captcha');
 
-var BodyRPCStore        = require('js/stores/rpc/body');
+var BodyRPCStore    = require('js/stores/rpc/body');
+
+var constants       = require('js/constants');
 
 if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
 
@@ -42,8 +44,7 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
 
             Start : function(query) {
                 var l = window.location;
-                Game.RPCBase = window.lacuna_rpc_base_url || l.protocol + '//' + l.host + '/';
-                Game.domain = l.hostname || '192.168.0.37';
+                Game.domain = l.hostname || 'lacunaexpanse.com';
 
                 // This is some glue code to make the server, body and empire stores listen for changes.
                 // Normally, React Components should do this automatically, but since we need these
@@ -53,12 +54,6 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
                 require('js/stores/ticker').listen(_.noop);
 
                 var body = document.getElementById('body');
-
-                // Blow out YUI-related HTML that is created by the React stuff.
-                body.removeChild(document.getElementById('footer'));
-                body.removeChild(document.getElementById('header'));
-                body.removeChild(document.getElementById('content'));
-                body.removeChild(document.getElementById('pulsing'));
 
                 // Give the React stuff somewhere to go.
                 var container = document.createElement('div');
@@ -166,7 +161,7 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
                 } else if (o.error.code === 1016) { // Captcha
                     WindowActions.windowAdd(Captcha, 'captcha', {
                         success : retry
-                    } );
+                    });
                 } else if (o.error.code === -32603) { // Internal error
                     Game.QuickDialog({
                         width : '500px',
@@ -252,11 +247,10 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
                 // enable esc handler
                 Game.escListener.enable();
 
-                document.title = 'Lacuna Expanse - ' + Game.EmpireData.name;
+                document.title = 'KA - ' + Game.EmpireData.name;
 
                 SessionActions.sessionSet(Game.GetSession(''));
                 UserActions.userSignIn();
-
             },
             InitEvents : function() {
                 // make sure we only subscribe once
@@ -298,7 +292,7 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
                         if (oSmd.services) {
                             serviceOut[sKey] = new YAHOO.rpc.Service(oSmd, {
                                 success : successFunc
-                            }, Game.RPCBase);
+                            }, constants.RPC_BASE);
                         } else {
                             serviceOut[sKey] = Game.InitServices(oSmd);
                         }
@@ -590,7 +584,7 @@ if (typeof YAHOO.lacuna.Game === 'undefined' || !YAHOO.lacuna.Game) {
                 // disable esc handler
                 Game.escListener.disable();
 
-                document.title = 'Lacuna Expanse';
+                document.title = 'Keno Antigen';
                 Game.RemoveCookie('locationId');
                 Game.RemoveCookie('locationView');
 

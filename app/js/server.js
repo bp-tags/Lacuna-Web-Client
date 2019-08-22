@@ -10,7 +10,6 @@ var ServerStatusActions     = require('js/actions/serverStatus');
 var BodyStatusActions       = require('js/actions/bodyStatus');
 var EmpireStatusActions     = require('js/actions/empireStatus');
 
-var WindowManagerActions    = require('js/actions/windowManager');
 var WindowActions           = require('js/actions/window');
 
 var Captcha                 = require('js/components/window/captcha');
@@ -70,8 +69,8 @@ var createData = function(options) {
 };
 
 var createUrl = function(options) {
-    if (window.lacuna_rpc_base_url) {
-        return window.lacuna_rpc_base_url + options.module;
+    if (window.lacuna_server_url) {
+        return window.lacuna_server_url + options.module;
     } else {
         return window.location.protocol + '//' + window.location.host + '/' + options.module;
     }
@@ -144,9 +143,9 @@ var sendRequest = function(url, data, options, retry) {
             };
 
             if (error.code === 1016) {
-                WindowActions.windowAdd(Captcha, 'captcha', { 
-                    success : retry 
-                } );
+                WindowActions.windowAdd(Captcha, 'captcha', {
+                    success : retry
+                });
             } else {
                 fail();
             }
