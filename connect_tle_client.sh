@@ -1,1 +1,1 @@
-docker exec -it lacuna/tle-client /bin/bash
+docker exec -it tle-client /bin/bash
