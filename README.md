@@ -1,7 +1,11 @@
 # Top Ideas
 ```
 https://github.com/communityus/proton-native
-https://github.com/communityus/react-native-desktop
+https://github.com/communityus/create-proton-app
+
+https://adtmag.com/articles/2017/10/30/vs-mobile-center-updates.aspx
+- code signing Xamarin related
+
 ```
 
 # Lacuna Web Client [![Stories in Ready](https://badge.waffle.io/plainblack/lacuna-web-client.png?label=ready&title=Ready)](https://waffle.io/plainblack/lacuna-web-client)
