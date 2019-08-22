@@ -1,3 +1,7 @@
+# Top Ideas
+https://github.com/kusti8/proton-native
+https://github.com/status-im/react-native-desktop
+
 # Lacuna Web Client [![Stories in Ready](https://badge.waffle.io/plainblack/lacuna-web-client.png?label=ready&title=Ready)](https://waffle.io/plainblack/lacuna-web-client)
 
 >  Web Client for the [open source](http://www.lacunaexpanse.com/developers) game [The Lacuna Expanse](http://www.lacunaexpanse.com/).
