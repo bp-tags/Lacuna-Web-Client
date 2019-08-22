@@ -17,3 +17,19 @@ If you're interested in hacking on the client, hit up the [developer's documenta
 # License
 
 See the [license file](LICENSE).
+
+
+# ToDo
+angular app executable
+https://angularfirebase.com/lessons/desktop-apps-with-electron-and-angular/
+https://angular.io/cli
+
+-build
+Angular app
+https://update.angular.io/#7.0:8.0
+
+
+deploy
+d 
+Invokes the deploy builder for a specified project. If no project is specified, the CLI will invoke the deploy builder for the default project in the workspace.
+
