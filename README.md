@@ -33,3 +33,13 @@ deploy
 d 
 Invokes the deploy builder for a specified project. If no project is specified, the CLI will invoke the deploy builder for the default project in the workspace.
 
+# more
+
+You wouldn't be the first to use Electron for desktop and React Native for mobile, if you choose that route - that's exactly what Discord did, and it seems to have turned out okay for them.
+https://stackoverflow.com/questions/48152008/can-you-use-react-native-to-create-a-desktop-app
+
+- one way (also mentioned above but diff approach)
+https://www.microsoft.com/developerblog/2016/05/26/creating-universal-windows-apps-with-react-native/
+
+# c# react electron
+https://github.com/communityus/electron-demo
