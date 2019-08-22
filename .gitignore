@@ -8,6 +8,6 @@ node_modules/
 bower_components/
 
 # Built JS and CSS files.
-lacuna/
+# lacuna/
 
-index.html
+# index.html
