@@ -34,6 +34,7 @@ d
 Invokes the deploy builder for a specified project. If no project is specified, the CLI will invoke the deploy builder for the default project in the workspace.
 
 # more
+https://alternativeto.net/software/electron/
 
 You wouldn't be the first to use Electron for desktop and React Native for mobile, if you choose that route - that's exactly what Discord did, and it seems to have turned out okay for them.
 https://stackoverflow.com/questions/48152008/can-you-use-react-native-to-create-a-desktop-app
@@ -46,6 +47,7 @@ https://github.com/communityus/electron-demo
 Copy C# folder “core” into “release-builds\electron-demo-win32-ia32” and run the electron-demo.exe
 
 # desktop (all?) linux
+https://www.npmjs.com/package/nativefier
 https://github.com/status-im/react-native-desktop
 https://github.com/kusti8/proton-native
 
@@ -55,3 +57,10 @@ https://github.com/ptmt/react-native-macos
 #win
 https://github.com/Microsoft/react-native-windows
 http://facebook.github.io/react-native/
+
+
+#ruby and nodejs
+http://enclose.io/
+
+#rails
+https://github.com/bp-tags/rails-in-electron
