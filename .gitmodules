@@ -1,0 +1,3 @@
+[submodule "lacuna/assets"]
+	path = lacuna/assets
+	url = https://github.com/communityus-private/assets.git
