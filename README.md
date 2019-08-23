@@ -90,3 +90,5 @@ http://enclose.io/
 
 #rails
 https://github.com/bp-tags/rails-in-electron
+
+https://github.com/communityus/unitywebpackager
