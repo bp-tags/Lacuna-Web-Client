@@ -12,6 +12,9 @@ https://adtmag.com/articles/2017/10/30/vs-mobile-center-updates.aspx
 
 ```
 https://developer.github.com/v3/rate_limit/
+https://github.com/galeksandrp/api-rate-limiting/issues/1
+The Search API has a custom rate limit, separate from the rate limit governing the rest of the REST API. The GraphQL API also has a custom rate limit ...
+
 ```
 
 # WebGL
