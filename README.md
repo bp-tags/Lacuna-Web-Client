@@ -8,6 +8,12 @@ https://adtmag.com/articles/2017/10/30/vs-mobile-center-updates.aspx
 
 ```
 
+# Endpoint
+
+```
+https://developer.github.com/v3/rate_limit/
+```
+
 # WebGL
 
 ```
