@@ -1,35 +1,30 @@
 'use strict';
 
-var React               = require('react');
-var Reflux              = require('reflux');
+var React = require('react');
+var Reflux = require('reflux');
 
-var NotesWindowActions  = require('js/actions/windows/notes');
-var BodyRPCActions      = require('js/actions/rpc/body');
+var NotesActions = require('js/actions/window/notes');
 
-var NotesWindowStore    = require('js/stores/windows/notes');
-var NotesBodyRPCStore   = require('js/stores/rpc/body/notes');
+var NotesWindowStore = require('js/stores/window/notes');
+var NotesRPCStore = require('js/stores/rpc/body/notes');
 
-var Panel               = require('js/components/window/panel');
+var Panel = require('js/components/panel');
 
 var NotesWindow = React.createClass({
-    mixins : [
-        Reflux.connect(NotesWindowStore, 'notesWindowShow'),
-        Reflux.connect(NotesBodyRPCStore, 'notes')
+    mixins: [
+        Reflux.connect(NotesWindowStore, 'show'),
+        Reflux.connect(NotesRPCStore, 'notes')
     ],
-    handleClose : function() {
-        // TODO We need to get the body ID from the NotesWindowStore
-        BodyRPCActions.requestBodyRPCSetColonyNotes({
-            bodyId : 1,
-            notes  : this.state.notes
-        });
-        NotesWindowActions.notesHide();
+    handleClose: function() {
+        NotesActions.save();
+        NotesActions.hide();
     },
-    handleChange : function(e) {
-        NotesWindowActions.notesSet(e.target.value);
+    handleChange: function(e) {
+        NotesActions.set(e.target.value);
     },
-    render : function() {
+    render: function() {
         return (
-            <Panel show={this.state.notesWindowShow} onClose={this.handleClose} title="Notes">
+            <Panel show={this.state.show} onClose={this.handleClose} title="Notes">
                 <div className="ui attached info message">
                     <i className="info icon"></i>
                     Closing this window will save your notes.
@@ -40,7 +35,7 @@ var NotesWindow = React.createClass({
                             value={this.state.notes}
                             onChange={this.handleChange}
                             style={{
-                                height : '450px'
+                                height: '450px'
                             }}>
                         </textarea>
                     </div>

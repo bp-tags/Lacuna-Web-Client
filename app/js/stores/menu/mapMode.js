@@ -1,41 +1,40 @@
 'use strict';
 
-var Reflux          = require('reflux');
+var Reflux = require('reflux');
 
-var MapActions      = require('js/actions/menu/map');
-
-var StatefulStore   = require('js/stores/mixins/stateful');
+var MapActions = require('js/actions/menu/map');
 
 var PLANET_MAP_MODE = 'planetMap';
-var STAR_MAP_MODE   = 'starMap';
+var STAR_MAP_MODE = 'starMap';
 
 var MapModeStore = Reflux.createStore({
+    listenables: MapActions,
 
-    listenables : [
-        MapActions
-    ],
+    init: function() {
+        this.mapMode = this.getInitialState();
+    },
 
-    mixins : [
-        StatefulStore
-    ],
-
-    getDefaultData : function() {
+    getInitialState: function() {
         return PLANET_MAP_MODE;
     },
 
-    onMapShowPlanet : function() {
-        this.emit(PLANET_MAP_MODE);
+    setMapMode: function(mapMode) {
+        if (mapMode !== this.mapMode) {
+            this.mapMode = mapMode;
+            this.trigger(this.mapMode);
+        }
     },
 
-    onMapShowStars : function() {
-        this.emit(STAR_MAP_MODE);
+    onShowPlanetMap: function() {
+        this.setMapMode(PLANET_MAP_MODE);
     },
 
-    onMapToggleMode : function() {
-        this.emit(this.getData() === PLANET_MAP_MODE
-            ? STAR_MAP_MODE
-            : PLANET_MAP_MODE
-        );
+    onShowStarMap: function() {
+        this.setMapMode(STAR_MAP_MODE);
+    },
+
+    onToggleMapMode: function() {
+        this.setMapMode(this.mapMode === PLANET_MAP_MODE ? STAR_MAP_MODE : PLANET_MAP_MODE);
     }
 });
 

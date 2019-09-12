@@ -1,16 +1,16 @@
 'use strict';
 
-var React            = require('react');
-var Reflux           = require('reflux');
+var React = require('react');
+var Reflux = require('reflux');
 
-var StatsWindowStore = require('js/stores/windows/stats');
+var StatsWindowStore = require('js/stores/window/stats');
 
 var StatsWindow = React.createClass({
-    mixins : [
-        Reflux.connect(StatsWindowStore, 'statsWindow')
+    mixins: [
+        Reflux.connect(StatsWindowStore, 'show')
     ],
-    render : function() {
-        if (this.state.statsWindow.show) {
+    render: function() {
+        if (this.state.show) {
             YAHOO.lacuna.Stats.show();
         }
 

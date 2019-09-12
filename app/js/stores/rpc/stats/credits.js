@@ -1,24 +1,24 @@
 'use strict';
 
-var Reflux              = require('reflux');
-var _                   = require('lodash');
+var Reflux = require('reflux');
 
-var StatefulMixinStore  = require('js/stores/mixins/stateful');
+var AboutActions = require('js/actions/window/about');
 
-var StatsRPCActions     = require('js/actions/rpc/stats');
+var server = require('js/server');
 
-var CreditsStatsRPCStore = Reflux.createStore({
+var CreditsRPCStore = Reflux.createStore({
+    listenables: AboutActions,
 
-    listenables : [
-        StatsRPCActions
-    ],
+    init: function() {
+        this.data = this.getInitialState();
+    },
 
-    mixins : [
-        StatefulMixinStore
-    ],
-
-    getDefaultData : function() {
+    getInitialState: function() {
         return {};
+    },
+
+    hasData: function() {
+        return _.keys(this.data).length > 0;
     },
 
     // INPUT:
@@ -38,17 +38,40 @@ var CreditsStatsRPCStore = Reflux.createStore({
     //     'Play Testers' : ['John Ottinger', 'Jamie Vrbsky']
     // }
 
-    onSuccessStatsRPCGetCredits : function(result) {
-        var credits = {};
-        
+    handleResult: function(result) {
+        var newResult = {};
+
         _.each(result, function(foo) {
             _.each(foo, function(names, header) {
-                credits[header] = names;
+                newResult[header] = names;
             });
         });
 
-        this.emit(credits);
+        return newResult;
+    },
+
+    onShow: function() {
+        AboutActions.load();
+    },
+
+    onLoad: function() {
+        // The credits change very rarely so don't waste RPC's on them.
+        if (this.hasData()) {
+            return;
+        }
+
+        server.call({
+            module: 'stats',
+            method: 'credits',
+            params: [],
+            addSession: false,
+            scope: this,
+            success: function(result) {
+                this.data = this.handleResult(result);
+                this.trigger(this.data);
+            }
+        });
     }
 });
 
-module.exports = CreditsStatsRPCStore;
+module.exports = CreditsRPCStore;

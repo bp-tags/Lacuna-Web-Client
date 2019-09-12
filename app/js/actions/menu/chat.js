@@ -3,8 +3,8 @@
 var Reflux = require('reflux');
 
 var ChatActions = Reflux.createActions([
-    'chatShow',
-    'chatHide'
+    'show',
+    'hide'
 ]);
 
 module.exports = ChatActions;

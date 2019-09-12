@@ -1,64 +1,61 @@
 'use strict';
 
-var React               = require('react');
-var PureRenderMixin     = require('react-addons-pure-render-mixin');
-var Reflux              = require('reflux');
-var _                   = require('lodash');
-var $                   = require('js/shims/jquery');
+var React = require('react');
+var Reflux = require('reflux');
+var _ = require('lodash');
+var $ = require('js/shims/jquery');
 
-var classNames          = require('classnames');
+var classNames = require('classnames');
 
-var EmpireRPCStore      = require('js/stores/rpc/empire');
-var PlanetStore         = require('js/stores/menu/planet');
+var EmpireRPCStore = require('js/stores/rpc/empire');
+var BodyRPCStore = require('js/stores/rpc/body');
 
 var RightSidebarActions = require('js/actions/menu/rightSidebar');
-var MapActions          = require('js/actions/menu/map');
+var MapActions = require('js/actions/menu/map');
 
-var RightSidebarStore   = require('js/stores/menu/rightSidebar');
+var RightSidebarStore = require('js/stores/menu/rightSidebar');
 
 var PlanetListItem = React.createClass({
 
-    propTypes : {
-        name        : React.PropTypes.string.isRequired,
-        id          : React.PropTypes.number.isRequired,
-        currentBody : React.PropTypes.number.isRequired,
-        zone        : React.PropTypes.string.isRequired
+    propTypes: {
+        name: React.PropTypes.string.isRequired,
+        id: React.PropTypes.string.isRequired,
+        currentBody: React.PropTypes.string.isRequired
     },
 
-    getInitialProps : function() {
+    getInitialProps: function() {
         return {
-            name        : '',
-            id          : 0,
-            currentBody : 0,
-            zone        : ''
+            name: '',
+            id: '',
+            currentBody: '',
         };
     },
 
     // Returns true if this list item is the the currently selected planet.
-    isCurrentWorld : function() {
-        return this.props.currentBody === this.props.id;
+    isCurrentWorld: function() {
+        return this.props.currentBody === this.props.id
     },
 
-    handleClick : function() {
-        RightSidebarActions.rightSidebarHide();
+    handleClick: function() {
+        RightSidebarActions.hide();
 
         if (this.isCurrentWorld()) {
-            YAHOO.lacuna.MapPlanet.Refresh();
+            YAHOO.lacuna.MapPlanet.Refresh()
         } else {
-            MapActions.mapChangePlanet(this.props.id);
+            MapActions.changePlanet(this.props.id);
         }
     },
 
-    render : function() {
+    render: function() {
         var classStr = classNames({
-            'ui large teal label' : this.isCurrentWorld(),
-            'item'                : !this.isCurrentWorld()
+            'ui large teal label': this.isCurrentWorld(),
+            'item': !this.isCurrentWorld()
         });
 
         return (
             <a className={classStr} onClick={this.handleClick} style={{
                 // For some reason this doesn't get set on the items (by Semantic) when it should.
-                cursor : 'pointer'
+                cursor: 'pointer'
             }}>
                 {this.props.name} ({this.props.zone})
             </a>
@@ -68,52 +65,52 @@ var PlanetListItem = React.createClass({
 
 var AccordionItem = React.createClass({
 
-    propTypes : {
-        list          : React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-        currentBody   : React.PropTypes.number.isRequired,
-        title         : React.PropTypes.string.isRequired,
-        initiallyOpen : React.PropTypes.bool.isRequired
+    propTypes: {
+        list: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+        currentBody: React.PropTypes.string.isRequired,
+        title: React.PropTypes.string.isRequired,
+        initiallyOpen: React.PropTypes.bool.isRequired,
     },
 
-    getInitialProps : function() {
+    getInitialProps: function() {
         return {
-            list          : [],
-            currentBody   : 0,
-            title         : '',
-            initiallyOpen : false
+            list: [],
+            currentBody: '',
+            title: '',
+            initiallyOpen: false
         };
     },
 
-    getInitialState : function() {
+    getInitialState: function() {
         return {
-            open : this.props.initiallyOpen
+            open: this.props.initiallyOpen
         };
     },
 
-    componentDidMount : function() {
-        RightSidebarActions.rightSidebarCollapse.listen(this.hideList);
-        RightSidebarActions.rightSidebarExpand.listen(this.showList);
+    componentDidMount: function() {
+        RightSidebarActions.collapseAccordion.listen(this.hideList);
+        RightSidebarActions.expandAccordion.listen(this.showList);
     },
 
-    showList : function() {
+    showList: function() {
         this.setState({
-            open : true
+            open: true
         });
     },
 
-    hideList : function() {
+    hideList: function() {
         this.setState({
-            open : false
+            open: false
         });
     },
 
-    toggleList : function() {
+    toggleList: function() {
         this.setState({
-            open : !this.state.open
+            open: !this.state.open
         });
     },
 
-    render : function() {
+    render: function() {
         return (
             <div>
                 <div
@@ -125,20 +122,20 @@ var AccordionItem = React.createClass({
                     }
                     onClick={this.toggleList}
                     style={{
-                        cursor : 'pointer'
+                        cursor: 'pointer',
                     }}
                 >
                     {
                         this.state.open
-                            ? <i className="angle down icon"></i>
-                            : <i className="angle right icon"></i>
+                        ? <i className="angle down icon"></i>
+                        : <i className="angle right icon"></i>
                     } {this.props.title}
                 </div>
                 <div style={{
-                    display : this.state.open ? '' : 'none'
+                    display: this.state.open ? '' : 'none'
                 }}>
                     {
-                        _.map(this.props.list, _.bind(function(planet) {
+                        _.map(this.props.list, function(planet) {
                             return (
                                 <PlanetListItem
                                     key={planet.id}
@@ -150,7 +147,7 @@ var AccordionItem = React.createClass({
                                     currentBody={this.props.currentBody}
                                 />
                             );
-                        }, this))
+                        }, this)
                     }
                 </div>
             </div>
@@ -159,58 +156,31 @@ var AccordionItem = React.createClass({
 });
 
 var BodiesAccordion = React.createClass({
-    propTypes : {
-        bodies      : React.PropTypes.object.isRequired,
-        currentBody : React.PropTypes.number.isRequired
-    },
 
-    render : function() {
-        var items = [
-            {
-                title         : 'My Colonies',
-                key           : 'colonies',
-                initiallyOpen : true,
-                isBaby        : false
-            },
-            {
-                title         : 'My Stations',
-                key           : 'mystations',
-                initiallyOpen : false,
-                isBaby        : false
-            },
-            {
-                title         : 'Our Stations',
-                key           : 'ourstations',
-                initiallyOpen : false,
-                isBaby        : false
-            }
-        ];
+    items: [
+        {
+            title: 'My Colonies',
+            key: 'colonies',
+            initiallyOpen: true
+        },
+        {
+            title: 'My Stations',
+            key: 'mystations',
+            initiallyOpen: false
+        },
+        {
+            title: 'Our Stations',
+            key: 'ourstations',
+            initiallyOpen: false
+        }
+    ],
 
-        // Handle all the babies.
-        _.chain(this.props.bodies.babies || {})
-            .keys()
-            .sortBy()
-            .each(function(babyName) {
-                items.push({
-                    title         : babyName + "'s Colonies",
-                    key           : babyName,
-                    initiallyOpen : false,
-                    isBaby        : true
-                });
-            })
-            .value();
-
+    render: function() {
         return (
             <div>
                 {
-                    _.map(items, _.bind(function(item) {
-                        var list = [];
-
-                        if (item.isBaby) {
-                            list = _.values(this.props.bodies.babies[item.key].planets) || [];
-                        } else {
-                            list = _.values(this.props.bodies[item.key]) || [];
-                        }
+                    _.map(this.items, function(item) {
+                        var list = this.props.bodies[item.key] || [];
 
                         if (list.length > 0) {
                             return (
@@ -223,116 +193,94 @@ var BodiesAccordion = React.createClass({
                                 />
                             );
                         }
-                    }, this))
+                    }, this)
                 }
             </div>
         );
     }
-});
+})
 
 var RightSidebar = React.createClass({
 
-    mixins : [
+    mixins: [
         Reflux.connect(EmpireRPCStore, 'empire'),
-        Reflux.connect(PlanetStore, 'planet'),
-        Reflux.connect(RightSidebarStore, 'showSidebar'),
-        PureRenderMixin
+        Reflux.connect(BodyRPCStore, 'body'),
+        Reflux.connect(RightSidebarStore, 'showSidebar')
     ],
 
-    componentDidMount : function() {
-        var el = this.refs.sidebar;
+    componentDidMount: function() {
+        var el = this.refs.sidebar.getDOMNode();
 
         $(el)
             .sidebar({
-                context    : $('#sidebarContainer'),
-                duration   : 300,
-                transition : 'overlay',
-                onHidden   : RightSidebarActions.rightSidebarHide,
-                onVisible  : RightSidebarActions.rightSidebarShow
+                context: $('#sidebarContainer'),
+                duration: 300,
+                transition: 'overlay',
+                onHidden: RightSidebarActions.hide,
+                onVisible: RightSidebarActions.show
             });
     },
 
-    componentDidUpdate : function(prevProps, prevState) {
+    componentDidUpdate: function(prevProps, prevState) {
         if (prevState.showSidebar !== this.state.showSidebar) {
             this.handleSidebarShowing();
         }
 
-        var $header = $(this.refs.header);
-        var $content = $(this.refs.content);
+        var $header = $(this.refs.header.getDOMNode());
+        var $content = $(this.refs.content.getDOMNode());
 
         $content.css({
-            height : window.innerHeight - $header.outerHeight()
+            height: window.innerHeight - $header.height()
         });
     },
 
-    handleSidebarShowing : function() {
-        var el = this.refs.sidebar;
+    handleSidebarShowing: function() {
+        var el = this.refs.sidebar.getDOMNode();
 
         $(el)
             .sidebar(this.state.showSidebar ? 'show' : 'hide');
     },
 
-    homePlanet : function() {
-        RightSidebarActions.rightSidebarHide();
-        MapActions.mapChangePlanet(this.state.empire.home_planet_id);
+    homePlanet: function() {
+        RightSidebarActions.hide();
+        MapActions.changePlanet(this.state.empire.home_planet_id);
     },
 
-    expand : function() {
-        RightSidebarActions.rightSidebarExpand();
+    expand: function() {
+        RightSidebarActions.expandAccordion();
     },
 
-    collapse : function() {
-        RightSidebarActions.rightSidebarCollapse();
+    collapse: function() {
+        RightSidebarActions.collapseAccordion();
     },
 
-    render : function() {
+    render: function() {
         return (
             <div className="ui right vertical inverted sidebar menu" ref="sidebar">
 
-                <div ref="header" style={{paddingTop : 7}}>
-                    <a
-                        title="Go to home planet"
-                        className="item"
-                        onClick={this.homePlanet}
-                        style={{
-                            display : 'inline'
-                        }}
-                    >
+                <div ref="header" style={{paddingTop:"7px"}}>
+                    <a title="Go to home planet" className="item" onClick={this.homePlanet} style={{display: "inline"}}>
                         Home
                     </a>
 
-                    <div style={{float : 'right'}}>
-                        <a
-                            title="Expand all"
-                            className="item"
-                            onClick={this.expand}
-                            style={{
-                                display : 'inline'
-                            }}
-                        >
-                            [+]
-                        </a>
+                    <div style={{float:'right'}}>
+                    <a title="Expand all" className="item" onClick={this.expand} style={{display: "inline"}}>
+                        [+]
+                    </a>
 
-                        <a
-                            title="Collapse all"
-                            className="item"
-                            onClick={this.collapse}
-                            style={{
-                                display : 'inline'
-                            }}
-                        >
-                            [-]
-                        </a>
+                    <a title="Collapse all" className="item" onClick={this.collapse} style={{display: "inline"}}>
+                        [-]
+                    </a>
                     </div>
                 </div>
 
                 <div ref="content" style={{
-                    overflow  : 'auto',
-                    overflowX : 'hidden'
+                    overflow: 'auto',
+                    overflowX: 'hidden'
                 }}>
                     <BodiesAccordion
                         bodies={this.state.empire.bodies}
-                        currentBody={this.state.planet}
+                        currentBody={this.state.body.id}
                     />
                 </div>
             </div>
