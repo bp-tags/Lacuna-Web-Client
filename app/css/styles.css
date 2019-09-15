@@ -5,7 +5,7 @@ light blue: #52ACFF
 */
 
 html {
-	background: black url('//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png');
+	background: black url('//localhost/assets/star_system/field.png');
 	color:#fff;
 	overflow: hidden;
 	box-sizing: content-box;
@@ -46,7 +46,7 @@ button, input[type="submit"], input[type="button"], .button {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #fefefe #dedede #dedede #fefefe;
-	background: #103070 url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/bar_bottom_back.png") 0 -10px;
+	background: #103070 url("//localhost/assets/ui/web/bar_bottom_back.png") 0 -10px;
 	color: #ffffff;
 }
 button:hover:active, input[type="submit"]:hover:active, input[type="button"]:hover:active, .button:hover:active {
