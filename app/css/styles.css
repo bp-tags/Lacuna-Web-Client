@@ -1922,7 +1922,7 @@ TextboxList
 @import url('https://cdnjs.cloudflare.com/ajax/libs/pnotify/2.0.0/pnotify.all.min.css');
 
 /* The fact that we're using US1 *might* be bad here. */
-@import url('https://localhost:8000/chiselchat/chiselchat.min.css');
+@import url('http://localhost:8000/chiselchat/chiselchat.min.css');
 
 
 /* Semantic overrides everything in this file and manages to not make a mess. Except for this... */
