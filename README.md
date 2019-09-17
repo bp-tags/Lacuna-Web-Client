@@ -18,14 +18,23 @@ Setting up and running everything should look something like this:
 ```bash
 git clone https://github.com/<your-username>/Lacuna-Web-Client
 cd Lacuna-Web-Client
-npm install gulp -g # installs the build tool, gulp. This should be a once-off.
-npm install # installs the dependencies for building and running the code.
-gulp dev # compiles js/css and launches dev server.
+
+# These should be on-offs. These commands install gulp and bower into the
+# global namespace so they can be used on the command line.
+#
+# Gulp is a task runner; it handles building and running the code.
+# Bower is a package manager; it handles downloading JS modules that can't
+# be downloaded off of npm like everythinge else should.
+npm install gulp -g
+npm install bower -g
+
+# Installs the dependencies for building and running the code.
+# This should be done every time `package.son` file changes.
+npm install
+
+# Compiles js/css and launches dev server.
+gulp dev
 ```
-
-## Note
-
-I ([1vasari](https://github.com/1vasari)) have a personal list which I'm working from at the moment. This is because issues are not switched on for this repo. It can be found [here](https://www.wunderlist.com/list/158378421). If you have any requests for the client it would most likely be best to send them to me via Lacuna Expanse's mail system - my empire name is `1vasari`.
 
 # Development
 
@@ -199,7 +208,7 @@ var SomeStore = Reflux.createStore({
 
 ## Extra Notes
 
-- Do **not** `require('jquery')`! Instead `require('js/hacks/jquery')`. We have to do this because we need to manually attach the Semantic UI JS code to the jQuery object. The details aren't really important, just remember to require the right one. :grinning:
+- Do **not** `require('jquery')`! Instead `require('js/shims/jquery')`. `js/shims/jquery` is used to attach the jQuery plugins we use to the one jQuery object.
 
 # Gulp Tasks
 
@@ -209,7 +218,7 @@ In this project, Gulp is used to manage building the code. All the tasks that ca
 
 > `gulp build`
 
-Runs the entire process of pulling all the JavaScript/CSS together and creates minified versions of them. This is also the default task, meaning that running just `gulp` in the command line will run this task.
+Runs the entire process of pulling all the JavaScript/CSS together and creates minified versions of them. This is the default task, meaning that running just `gulp` in the command line will run this task.
 
 ## dev
 
@@ -222,3 +231,13 @@ This puts all the JavaScript and CSS together and starts a web server to run the
 > `gulp serve`
 
 This just runs the server for running the client in a browser.
+
+## clear
+
+> `gulp clear`
+
+This deletes temporary files and files from the build.
+
+# C#
+- https://github.com/communityus-mono/Epacsenur 
+- https://github.com/communityus/communityus.github.io/blob/master/TLE/subs
