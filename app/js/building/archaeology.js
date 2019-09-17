@@ -292,11 +292,11 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
     viewExcavators : function(e) {
       if(e.newValue) {
         if(!this.excavators) {
-          require('js/actions/menu/loader').show();
+          Lacuna.Pulser.Show();
           this.service.view_excavators({session_id:Game.GetSession(),building_id:this.building.id}, {
             success : function(o){
               YAHOO.log(o, "info", "Archaeology.view_excavators.success");
-              require('js/actions/menu/loader').hide();
+              Lacuna.Pulser.Hide();
               this.rpcSuccess(o);
               this.excavators = { 
                 max_excavators:o.result.max_excavators,
@@ -347,8 +347,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
 
             Dom.addClass(nLi,"excavatorLocation");
             nLi.innerHTML = ['<img src="',Lib.AssetUrl,'star_system/',obj.body.image,'.png" />', obj.body.name].join('');
-            Event.on(nLi, "click", function () { Game.StarJump({x:obj.body.x,y:obj.body.y}) }, obj, true);
-                     //this.excavatorClick, obj, true);
+            Event.on(nLi, "click", this.excavatorClick, obj, true);
             nUl.appendChild(nLi);
             
             if (obj.id > 0) {
@@ -404,7 +403,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
     },
     ExcavatorAbandon : function() {
       if(confirm(["Are you sure you want to Abandon the excavator ",this.Excavator.id," at  ",this.Excavator.body.name,"?"].join(''))) {
-        require('js/actions/menu/loader').show();
+        Lacuna.Pulser.Show();
         
         this.Self.service.abandon_excavator({
           session_id:Game.GetSession(),
@@ -413,7 +412,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
         }, {
           success : function(o){
             YAHOO.log(o, "info", "Archaeology.ExcavatorAbandon.success");
-            require('js/actions/menu/loader').hide();
+            Lacuna.Pulser.Hide();
             this.Self.rpcSuccess(o);
             var excavators = this.Self.excavators.excavators;
             for(var i=0; i<excavators.length; i++) {
@@ -444,7 +443,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
           if(this.ore.hasOwnProperty(oKey)) {
             var nOpt = opt.cloneNode(false);
             nOpt.value = oKey;
-            nOpt.innerHTML = [oKey, ' (', Lib.formatNumber(this.ore[oKey]), ')'].join('');
+            nOpt.innerHTML = [oKey, ' (', this.ore[oKey], ')'].join('');
             sel.appendChild(nOpt);
           }
         }
@@ -564,11 +563,11 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
     
     getOres : function() {
       if(!this.ore) {
-        require('js/actions/menu/loader').show();
+        Lacuna.Pulser.Show();
         this.service.get_ores_available_for_processing({session_id:Game.GetSession(),building_id:this.building.id}, {
           success : function(o){
             YAHOO.log(o, "info", "Archaeology.getOres.success");
-            require('js/actions/menu/loader').hide();
+            Lacuna.Pulser.Hide();
             this.rpcSuccess(o);
             this.ore = o.result.ore;
             
@@ -580,11 +579,11 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
     },
     getGlyphs : function() {
       if(!this.glyphs) {
-        require('js/actions/menu/loader').show();
+        Lacuna.Pulser.Show();
         this.service.get_glyphs({session_id:Game.GetSession(),building_id:this.building.id}, {
           success : function(o){
             YAHOO.log(o, "info", "Archaeology.getGlyphs.success");
-            require('js/actions/menu/loader').hide();
+            Lacuna.Pulser.Hide();
             this.rpcSuccess(o);
             this.glyphs = o.result.glyphs;
             
@@ -595,7 +594,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
       }
     },
     assembleGlyph : function() {
-      require('js/actions/menu/loader').show();
+      Lacuna.Pulser.Show();
       var glyphs = Sel.query("li", "archaeologyGlyphCombine"),
         glyphTypes = [],
         quantity = parseInt(Dom.get("combineQuantity").value,10);
@@ -609,7 +608,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
           var article = (quantity==1) ? "a" : quantity;
           var suffix = (quantity==1) ? "plan" : "plans";
           alert("You have found " + article + " " + o.result.item_name + " " + suffix + "!");
-          require('js/actions/menu/loader').hide();
+          Lacuna.Pulser.Hide();
           this.rpcSuccess(o);
           delete this.glyphs;
           this.getGlyphs();
@@ -618,7 +617,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
       });
     },
     searchForGlyph : function() {
-      require('js/actions/menu/loader').show();
+      Lacuna.Pulser.Show();
       var sel = Dom.get("archaeologyOre"),
         opts = sel.options,
         selInd = sel.selectedIndex,
@@ -628,7 +627,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
         this.service.search_for_glyph({session_id:Game.GetSession(),building_id:this.building.id,ore_type:type}, {
           success : function(o){
             YAHOO.log(o, "info", "Archaeology.searchForGlyph.success");
-            require('js/actions/menu/loader').hide();
+            Lacuna.Pulser.Hide();
             this.rpcSuccess(o);
             //this.work = o.result.building.work;
             //this.updateBuildingTile(o.result.building);
@@ -639,14 +638,14 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
       }
     },
     Subsidize : function() {
-      require('js/actions/menu/loader').show();
+      Lacuna.Pulser.Show();
       
       this.service.subsidize_search({
         session_id:Game.GetSession(),
         building_id:this.building.id
       }, {
         success : function(o){
-          require('js/actions/menu/loader').hide();
+          Lacuna.Pulser.Hide();
           this.rpcSuccess(o);
 
           delete this.work;
@@ -661,14 +660,14 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
     },
     AbandonAllExcavators : function(e) {
         if(confirm("Are you sure you want to abandon all excavators controlled by this Archaeology Ministry?")) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.mass_abandon_excavator({
                     session_id:Game.GetSession(),
                     building_id:this.building.id
                  }, {
                 success : function(o){
                      YAHOO.log(o, "info", "Archaeology.AbandonAllExcavators.mass_abandon_excavator.success");
-                     require('js/actions/menu/loader').hide();
+                     Lacuna.Pulser.Hide();
                      this.rpcSuccess(o);
                      this.probes = null;
                         

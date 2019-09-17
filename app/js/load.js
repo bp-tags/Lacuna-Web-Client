@@ -1,6 +1,10 @@
 'use strict';
 
 (function(){
+    // These libs are really important. Grab them before anything else happens.
+    window.React = require('react');
+    window.$ = window.jQuery = require('jquery');
+    window._ = require('lodash');
 
     // TODO this code can be improved.
     var l = window.location;
@@ -19,11 +23,17 @@
         l.hash = '';
     }
 
+    // Ensure the Blue Wheel of Death is hiding.
+    var p = document.getElementById('pulsing');
+    if (p.className.indexOf('hidden') < 0) {
+        p.className += ' hidden';
+    }
+
     var loader = new YAHOO.util.YUILoader({
-        base: '//ajax.googleapis.com/ajax/libs/yui/2.8.2r1/build/',
-        //filter: 'MIN',
-        allowRollup: true,
-        combine: false
+        base: '//ajax.googleapis.com/ajax/libs/yui/2.9.0/build/',
+        filter: 'MIN',
+        allowRollup: false,
+        combine: true
     });
 
     // List of YUI2 components that need to be loaded.
@@ -60,10 +70,9 @@
 
         // RPC and core stuff
         require('js/library');
-        require('js/textboxList');
-        require('js/smd');
-        require('js/rpc');
         require('js/game');
+        require('js/rpc');
+        require('js/smd');
 
         // Empire management and star map
         require('js/announce');
@@ -84,7 +93,6 @@
         require('js/building/embassy');
         require('js/building/energyReserve');
         require('js/building/entertainment');
-        require('js/building/essentiaVein');
         require('js/building/foodReserve');
         require('js/building/geneticsLab');
         require('js/building/intelligence');
@@ -122,11 +130,13 @@
 
         // Menu stuff
         require('js/mapPlanet');
+        require('js/textboxList');
         require('js/messaging');
-
+        require('js/essentia');
         require('js/invite');
         require('js/profile');
         require('js/stats');
+        require('js/pulse');
         require('js/info');
         require('js/notify');
         require('js/captcha');

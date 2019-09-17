@@ -39,7 +39,7 @@ if (typeof YAHOO.lacuna.buildings.Park == "undefined" || !YAHOO.lacuna.buildings
             return this.partyTab;
         },
         Party : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             
             this.service.throw_a_party({
                 session_id:Game.GetSession(),
@@ -47,7 +47,7 @@ if (typeof YAHOO.lacuna.buildings.Park == "undefined" || !YAHOO.lacuna.buildings
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Park.Party.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     //this.work = o.result.building.work;
                     //this.updateBuildingTile(o.result.building);
@@ -102,7 +102,7 @@ if (typeof YAHOO.lacuna.buildings.Park == "undefined" || !YAHOO.lacuna.buildings
             }
         },
         Subsidize : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             Dom.get("parkSubsidize").disabled = true;
             
             this.service.subsidize_party({
@@ -110,7 +110,7 @@ if (typeof YAHOO.lacuna.buildings.Park == "undefined" || !YAHOO.lacuna.buildings
                 building_id:this.building.id
             }, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
 
                     //delete this.work;

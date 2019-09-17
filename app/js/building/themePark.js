@@ -42,14 +42,14 @@ if (typeof YAHOO.lacuna.buildings.ThemePark == "undefined" || !YAHOO.lacuna.buil
         },
         
         operate : function() {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
                 
             this.service.operate({
                 session_id:Game.GetSession(),
                 building_id:this.building.id
             }, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     
                     this.updateDisplay(o.result);

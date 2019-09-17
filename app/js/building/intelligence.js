@@ -107,11 +107,11 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
         spiesView : function(e) {
             if(e.newValue) {
                 if(!this.spies) {
-                    require('js/actions/menu/loader').show();
+                    Lacuna.Pulser.Show();
                     this.service.view_spies({session_id:Game.GetSession(),building_id:this.building.id}, {
                         success : function(o){
                             YAHOO.log(o, "info", "Intelligence.Intelligence.view_spies.success");
-                            require('js/actions/menu/loader').hide();
+                            Lacuna.Pulser.Hide();
                             this.rpcSuccess(o);
                             this.spies = o.result;
                             this.pager = new Pager({
@@ -365,7 +365,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }
         },
         SpyHandlePagination : function(newState) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.view_spies({
                 session_id:Game.GetSession(),
                 building_id:this.building.id,
@@ -373,7 +373,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Intelligence.SpyHandlePagination.view_spies.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     this.spies = o.result;
                     this.SpyPopulate();
@@ -393,7 +393,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }
         },
         SpyAssign : function() {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             var assign = this.Assign[this.Assign.selectedIndex].value;
             
             this.Self.service.assign_spy({
@@ -404,7 +404,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Intelligence.SpyAssign.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.Self.rpcSuccess(o);
                     //delete this.Self.spies; /* Can't delete it, we need it later */
                     var spy = o.result.spy;
@@ -432,7 +432,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
         },
         SpyBurn : function() {
             if(confirm(["Are you sure you want to Burn ",this.Spy.name,"?"].join(''))) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 
                 this.Self.service.burn_spy({
                     session_id:Game.GetSession(),
@@ -441,7 +441,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
                 }, {
                     success : function(o){
                         YAHOO.log(o, "info", "Intelligence.SpyBurn.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.Self.rpcSuccess(o);
                         var spies = this.Self.spies.spies;
                         for(var i=0; i<spies.length; i++) {
@@ -482,7 +482,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
         },
         SpyNameSave : function(e) {
             Event.stopEvent(e);
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             var newName = this.Input.value;
             
             this.Self.service.name_spy({
@@ -493,7 +493,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Intelligence.SpyNameSave.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.Self.rpcSuccess(o);
                     //this.Self.spies = undefined; /* Can't delete it, we need it later */
                     this.Spy.name = newName;
@@ -526,11 +526,11 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
                 num = select[select.selectedIndex].value*1;
                 
             if(Lang.isNumber(num) && num <= this.result.spies.maximum - this.result.spies.current) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.train_spy({session_id:Game.GetSession(),building_id:this.building.id,quantity:num}, {
                     success : function(o){
                         YAHOO.log(o, "info", "Intelligence.SpyTrain.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         var trained = o.result.trained*1;
                         if(trained > 0) {
@@ -550,7 +550,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
             }
         },
         Subsidize : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             Dom.get("spiesSubsidize").disabled = true;
             
             this.service.subsidize_training({
@@ -558,7 +558,7 @@ if (typeof YAHOO.lacuna.buildings.Intelligence == "undefined" || !YAHOO.lacuna.b
                 building_id:this.building.id
             }, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
 
                     delete this.spies;

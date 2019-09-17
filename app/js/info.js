@@ -1,12 +1,8 @@
 YAHOO.namespace("lacuna");
 
-var ServerClockActions = require('js/actions/window/serverClock');
-
-var _ = require('lodash');
-
 
 if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
-
+    
 (function(){
     var Lang = YAHOO.lang,
         Util = YAHOO.util,
@@ -15,7 +11,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
         Lacuna = YAHOO.lacuna,
         Game = Lacuna.Game,
         Lib = Lacuna.Library;
-
+        
     var Alliance = function(){
         this.id = "infoAlliance";
     };
@@ -27,7 +23,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                 Dom.addClass(container, Lib.Styles.HIDDEN);
                 container.innerHTML = this._getHtml();
                 document.body.insertBefore(container, document.body.firstChild);
-
+                
                 this.Panel = new YAHOO.widget.Panel(this.id, {
                     constraintoviewport:true,
                     visible:false,
@@ -47,9 +43,9 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                     this.leader = Dom.get(this.id+'Leader');
                     this.memberList = Dom.get(this.id+'Members');
                     this.memberCount = Dom.get(this.id+'MemberCount');
-
+                    
                     Event.delegate(this.memberList, "click", this.EmpireInfo, "a.profile_link", this, true);
-
+                    
                     Dom.removeClass(this.id, Lib.Styles.HIDDEN);
                 }, this, true);
                 this.Panel.render();
@@ -77,21 +73,21 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
         },
         Load : function(allianceId) {
             this._createPanel();
-
-            require('js/actions/menu/loader').show();
+            
+            Lacuna.Pulser.Show();
             Game.Services.Alliance.view_profile({session_id:Game.GetSession(""),alliance_id:allianceId},{
                 success:function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     //show now so there is a bit quicker response
                     this.Panel.show();
                     this.Panel.bringToTop();
-
+                    
                     var profile = o.result.profile;
                     this.name.innerHTML = profile.name;
                     this.desc.innerHTML = profile.description;
                     this.founded.innerHTML = Lib.formatServerDate(profile.date_created);
                     this.memberCount.innerHTML = profile.members.length;
-
+                    
                     var memberArray = ['<li style="border-bottom:1px solid #52ACFF;"><label>Num</label><label>Name</label></li>'];
                     for(var m=0; m<profile.members.length; m++) {
                         var member = profile.members[m];
@@ -100,7 +96,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                         }
                         memberArray = memberArray.concat(['<li><label>',m+1,'</label><a class="profile_link" style="text-decoration:underline;cursor:pointer;" href="#',member.id,'">',member.name,'</a></li>']);
                     }
-
+                    
                     this.memberList.innerHTML = memberArray.join('');
                 },
                 scope:this
@@ -112,7 +108,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
             Lacuna.Info.Empire.Load(res[1]);
         }
     };
-
+    
     var Empire = function(){
         this.id = "infoEmpire";
     };
@@ -124,7 +120,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                 Dom.addClass(container, Lib.Styles.HIDDEN);
                 container.innerHTML = this._getHtml();
                 document.body.insertBefore(container, document.body.firstChild);
-
+                
                 this.Panel = new YAHOO.widget.Dialog(this.id, {
                     constraintoviewport:true,
                     visible:false,
@@ -148,11 +144,11 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                     this.colonyCount = Dom.get(this.id+"ColonyCount");
                     this.founded = Dom.get(this.id+"Founded");
                     this.login = Dom.get(this.id+"Login");
-
+                    
                     this.coloniesList = Dom.get(this.id+"ColoniesList");
-
+                    
                     this.medalsList = Dom.get(this.id+"MedalsList");
-
+                    
                     this.playerName = Dom.get(this.id+"PlayerName");
                     this.city = Dom.get(this.id+"City");
                     this.country = Dom.get(this.id+"Country");
@@ -218,11 +214,11 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
         },
         Load : function(empireId) {
             this._createPanel();
-
-            require('js/actions/menu/loader').show();
+            
+            Lacuna.Pulser.Show();
             Game.Services.Empire.view_public_profile({session_id:Game.GetSession(""),empire_id:empireId},{
                 success:function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     var profile = o.result.profile;
                     this.currentEmpire = profile;
                     this.empire.innerHTML = profile.name;
@@ -233,16 +229,16 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                     this.colonyCount.innerHTML = profile.colony_count;
                     this.founded.innerHTML = Lib.formatServerDate(profile.date_founded);
                     this.login.innerHTML = Lib.formatServerDate(profile.last_login);
-
+                    
                     //show now so there is a bit quicker response
                     this.Panel.show();
                     this.Panel.bringToTop();
-
+                    
                     this.playerName.innerHTML = profile.player_name;
                     this.city.innerHTML = profile.city;
                     this.country.innerHTML = profile.country;
                     this.skype.innerHTML = profile.skype ? ['<a href="callto:',profile.skype,'">',profile.skype,'</a>'].join('') : '';
-
+                    
                     var medalArray = [];
                     for(var medalId in profile.medals) {
                         var medal = profile.medals[medalId];
@@ -254,17 +250,16 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                         ]);
                     }
                     this.medalsList.innerHTML = medalArray.join('');
-
+                    
                     var colonyArray = [];
                     for(var colonyId in profile.known_colonies) {
                         var colony = profile.known_colonies[colonyId];
-                        var homeworldclass = colony.homeworld ? " homeworld-highlight" : ""
                         colonyArray = colonyArray.concat(['<li>',
                         '    <div class="planetContainer yui-gf">',
                         '        <div class="yui-u first planetImage" style="background-color:black;">',
                         '            <img src="',Lib.AssetUrl,'star_system/',colony.image,'.png" alt="',colony.name,'" style="width:50px;height:50px;" />',
                         '        </div>',
-                        '        <div class="yui-u', homeworldclass, '">',
+                        '        <div class="yui-u">',
                         '            <div>',colony.name,'</div>',
                         '            <div>',colony.x,' : ',colony.y,'</div>',
                         '        </div>',
@@ -273,7 +268,7 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                         ]);
                     }
                     this.coloniesList.innerHTML = colonyArray.join('');
-
+                    
                     if(profile.alliance) {
                         Event.on(this.id+'Alliance', "click", function(e, id){
                             Lacuna.Info.Alliance.Load(id);
@@ -293,19 +288,19 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
             }
         }
     };
-
+    
     var Clock = function(){
         this.id = "infoClock";
     };
     Clock.prototype = {
-        build: _.once(function() {
+        _createDisplay : function() {
             var container = document.createElement("div");
             container.id = "clock";
             Dom.addClass(container, Lib.Styles.HIDDEN);
             Dom.addClass(container, "nofooter");
             container.innerHTML = this._getHtml();
-            document.getElementById('oldYUIPanelContainer').appendChild(container);
-
+            document.body.insertBefore(container, document.body.firstChild);
+            
             this.Display = new YAHOO.widget.Panel("clock", {
                 constraintoviewport:true,
                 visible:false,
@@ -315,10 +310,9 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
                 underlay:false,
                 modal:false,
                 width:"300px",
-                context:["footer","bl","tl", ["beforeShow"], [0,-40]],
-                zIndex: 10000
+                context:["footer","bl","tl", ["beforeShow"], [0,-40]]
             });
-            this.Display.renderEvent.subscribe(function(){
+            this.Display.renderEvent.subscribe(function(){                    
                 Dom.removeClass("clock", Lib.Styles.HIDDEN);
                 this.clock = Dom.get("clockDisplay");
             });
@@ -328,15 +322,12 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
             }, this, true);
             this.Display.hideEvent.subscribe(function(){
                 Game.onTick.unsubscribe(this._updating);
-
-                // Let the React stuff know that we're going away now. :D
-                ServerClockActions.hide();
             }, this, true);
             this.Display.render();
-        }),
+        },
         _getHtml : function() {
             return [
-            '    <div class="hd">Server Clock</div>',
+            '    <div class="hd">Server Time</div>',
             '    <div class="bd">',
             '        <div id="clockDisplay"></div>',
             '    </div>'
@@ -346,7 +337,9 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
             this.clock.innerHTML = Lacuna.Game.ServerData.time.toUTCString(); //Lib.formatUTC(Lacuna.Game.ServerData.time);
         },
         Show : function() {
-            this.build();
+            if(!this.Display) {
+                this._createDisplay();
+            }
             this.Display.show();
         },
         Hide : function() {
@@ -355,16 +348,16 @@ if (typeof YAHOO.lacuna.Info == "undefined" || !YAHOO.lacuna.Info) {
             }
         }
     };
-
-
+    
+    
     YAHOO.lacuna.Info = {
         Alliance: new Alliance(),
         Empire: new Empire(),
         Clock: new Clock()
     };
-
+        
 })();
-YAHOO.register("info", YAHOO.lacuna.Info, {version: "1", build: "0"});
+YAHOO.register("info", YAHOO.lacuna.Info, {version: "1", build: "0"}); 
 
 }
 // vim: noet:ts=4:sw=4

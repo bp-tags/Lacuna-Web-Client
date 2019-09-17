@@ -1,13 +1,7 @@
 YAHOO.namespace("lacuna.buildings");
 
-var $ = require('js/hacks/jquery');
-
-var MapActions = require('js/actions/menu/map');
-
-var EmpireRPCStore = require('js/stores/rpc/empire');
-
 if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacuna.buildings.PlanetaryCommand) {
-
+    
 (function(){
     var Lang = YAHOO.lang,
         Util = YAHOO.util,
@@ -20,10 +14,10 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
 
     var PlanetaryCommand = function(result){
         PlanetaryCommand.superclass.constructor.call(this, result);
-
+        
         this.service = Game.Services.Buildings.PlanetaryCommand;
     };
-
+    
     Lang.extend(PlanetaryCommand, Lacuna.buildings.Building, {
         getTabs : function() {
             var tabs = PlanetaryCommand.superclass.getTabs.call(this);
@@ -31,40 +25,26 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             return tabs;
         },
         getChildTabs : function() {
-            return [this._getPlanTab(), this._getResourcesTab(), this._getNotesTab()];
+            return [this._getPlanTab(), this._getResourcesTab()];
         },
         _getPlanetTab : function() {
-            var planet = this.result.planet;
-            var details = function(type,imgclass) {
-                var Type = Lib.capitalizeFirstLetter(type);
-                var stored   = planet[type+"_stored"] || planet[type];
-                var capacity = planet[type+"_capacity"];
-                var perhour  = planet[type+"_hour"];
-                if (!imgclass) {
-                    imgclass = Type;
-                }
-                return [
-                        '<li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/',type,'.png" title="',Type,'" class="small',imgclass,'" /></span>',
-                        '    <span class="pcStored" title="',Lib.formatNumber(stored),'">',Lib.convertNumDisplay(stored),'</span>',
-                        capacity ? [
-                        '    <span class="pcSlash">/</span>',
-                        '    <span class="pcCapacity" title="',Lib.formatNumber(capacity),'">',Lib.convertNumDisplay(capacity),'</span>'].join('') :
-                        [
-                         '<span class="pcSlash">&nbsp;</span><span class="pcCapacity">&nbsp;</span>'
-                        ].join(''),
-                        '  @ <span class="pcPerHour" title="',Lib.formatNumber(perhour),'">',Lib.convertNumDisplay(perhour),'/hr</span></li>',
-                       ].join('');
-            };
-            var tab = new YAHOO.widget.Tab({ label: "Planet", content: [
+            var planet = this.result.planet,
+                tab = new YAHOO.widget.Tab({ label: "Planet", content: [
                     '<div class="yui-g buildingDetailsExtra">',
                     '    <div class="yui-u first">',
                     '        <ul>',
-                    details('food'),
-                    details('ore'),
-                    details('water'),
-                    details('energy'),
-                    details('waste'),
-                    details('happiness','Happy'),
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span>',
+                    '                <span class="pcStored">',planet.food_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.food_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.food_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span>',
+                    '                <span class="pcStored">',planet.ore_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.ore_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.ore_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span>',
+                    '                <span class="pcStored">',planet.water_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.water_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.water_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span>',
+                    '                <span class="pcStored">',planet.energy_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.energy_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.energy_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span>',
+                    '                <span class="pcStored">',planet.waste_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.waste_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.waste_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" title="Happiness" class="smallHappy" /></span>',
+                    '                <span class="pcStored">',planet.happiness, '</span><span class="pcSlash">&nbsp;</span><span class="pcCapacity">&nbsp;</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.happiness_hour),'</span>/hr</li>',
                     '        </ul>',
                     '    </div>',
                     '    <div class="yui-u first">',
@@ -73,10 +53,8 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     '            <li><label>Planet Size:</label>',planet.size,'</li>',
                     '            <li><label>Plots Available:</label>',(planet.plots_available || 0)*1,'</li>',
                     '            <li><label>Population:</label>',Lib.formatNumber(planet.population),'</li>',
-                    '            <li title="',Lib.formatNumber(this.result.next_colony_cost),'"><label>Next Colony Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
-                    '            <li title="',Lib.formatNumber(this.result.next_colony_srcs),'"><label>Next <span title="Short Range Colony Ship">SRCS</span> Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_srcs),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
-                    this.result.next_station_cost ? ['<li title="',Lib.formatNumber(this.result.next_station_cost),'"><label>Next Station Cost:</label>',Lib.convertNumDisplay(this.result.next_station_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>'].join('') : '',
-                    '            <li title="',Lib.formatNumber(this.result.insurrect_value),'"><label>Insurrect Value:</label>',Lib.convertNumDisplay(this.result.insurrect_value),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
+                    '            <li><label>Next Colony Cost:</label>',Lib.formatNumber(this.result.next_colony_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
+                    this.result.next_station_cost ? ['<li><label>Next Station Cost:</label>',Lib.formatNumber(this.result.next_station_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>'].join('') : '',
                     '            <li><label>Location:</label>',planet.x,'x : ',planet.y,'y</li>',
                     '            <li><label>Zone:</label>',planet.zone,'</li>',
                     '            <li><label>Star:</label>',planet.star_name,' (Star ID: ',planet.star_id,')</li>',
@@ -86,9 +64,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     '    </div>',
                     '</div>'
                 ].join('')});
-
+                
             this.planetTab = tab;
-
+            
             return tab;
         },
         _getAbandonTab : function() {
@@ -96,9 +74,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             '    <div id="commandMessage" class="alert">This colony and everything on it will disappear if you abandon it.</div>',
             '    <button type="button" id="commandAbandon">Abandon Colony</button>',
             '</div>'].join('')});
-
+            
             Event.on("commandAbandon", "click", this.Abandon, this, true);
-
+            
             return this.abandonTab;
         },
         _getRenameTab : function() {
@@ -108,9 +86,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             '    <li class="alert" id="commandPlanetRenameMessage"></li>',
             '    <li><button type="button" id="commandRename">Rename</button></li>',
             '</ul></div>'].join('')});
-
+            
             Event.on("commandRename", "click", this.Rename, this, true);
-
+            
             return this.renameTab;
         },
         _getPlanTab : function() {
@@ -124,13 +102,13 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             this.planTab.subscribe("activeChange", function(e) {
                 if(e.newValue) {
                     if(!this.plans) {
-                        require('js/actions/menu/loader').show();
+                        Lacuna.Pulser.Show();
                         this.service.view_plans({session_id:Game.GetSession(),building_id:this.building.id}, {
                             success : function(o){
-                                require('js/actions/menu/loader').hide();
+                                Lacuna.Pulser.Hide();
                                 this.rpcSuccess(o);
                                 this.plans = o.result.plans;
-
+                                
                                 this.PlanPopulate();
                             },
                             scope:this
@@ -141,55 +119,55 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     }
                 }
             }, this, true);
-
+                
             return this.planTab;
         },
         _getResourcesTab : function() {
-
+            
             var food_items = '',
                 foods      = Lib.ResourceTypes.food;
-
+            
             for(x=0; x < foods.length; x++) {
                 food = foods[x];
-
+                
                 food_items += [
                     '<li><label>',
                     food.titleCaps(),
-                    '</label><span class="pcStored" title="', Lib.formatNumber(this.result.food[food+"_stored"]),'">',
-                    Lib.convertNumDisplay(this.result.food[food+"_stored"]),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.food[food+"_hour"]),'">',
+                    '</label><span class="pcStored">',
+                    this.result.food[food+"_stored"],
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.food[food+"_hour"]),
                     '</span>/hr</li>',
                 ].join('');
             }
-
+            
             var ore_items = '',
                 ores      = Lib.ResourceTypes.ore;
-
+            
             for(x=0; x < ores.length; x++) {
                 ore = ores[x];
-
+                
                 ore_items += [
                     '<li><label>',
                     ore.titleCaps(),
-                    '</label><span class="pcStored" title="', Lib.formatNumber(this.result.ore[ore+"_stored"]),'">',
-                    Lib.convertNumDisplay(this.result.ore[ore+"_stored"]),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.ore[ore+"_hour"]),'">',
+                    '</label><span class="pcStored">',
+                    this.result.ore[ore+"_stored"],
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.ore[ore+"_hour"]),
                     '</span>/hr</li>',
                 ].join('');
             }
             ore_items += [
-                    '<li><label>Water</label><span class="pcStored" title="', Lib.formatNumber(this.result.planet.water_stored),'">',
-                    Lib.convertNumDisplay(this.result.planet.water_stored),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.planet.water_hour),'">',
+                    '<li><label>Water</label><span class="pcStored">',
+                    this.result.planet.water_stored,
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.planet.water_hour),
                     '</span>/hr</li>',
                 ].join('');
             ore_items += [
-                    '<li><label>Energy</label><span class="pcStored" title="', Lib.formatNumber(this.result.planet.energy_stored),'">',
-                    Lib.convertNumDisplay(this.result.planet.energy_stored),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.planet.energy_hour),'">',
+                    '<li><label>Energy</label><span class="pcStored">',
+                    this.result.planet.energy_stored,
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.planet.energy_hour),
                     '</span>/hr</li>',
                 ].join('');
@@ -208,26 +186,13 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     '    </div>',
                     '</div>'
                 ].join('')});
-
+                
             return this.resourcesTab;
-        },
-        _getNotesTab : function() {
-            var notes = Game.GetCurrentPlanet().notes;
-            this.notesTab = new YAHOO.widget.Tab({ label: "Notes", content: [
-            '<div id="pccNotes">',
-            '    <textarea id="pccNotesText" title="Write down anything you would like to store with this body.">', $('<div/>').text(notes ? notes : '').html(), '</textarea>',
-            '    <button type="button" id="saveColonyNotes">Save</button>',
-            '</div>'
-            ].join('')});
-
-            Event.on("saveColonyNotes","click",this.SaveColonyNotes, this, true);
-
-            return this.notesTab;
         },
         Abandon : function() {
             var cp = Game.GetCurrentPlanet();
             if(confirm(['Are you sure you want to abandon ',cp.name,'?'].join(''))) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 Game.Services.Body.abandon({
                     session_id:Game.GetSession(""),
                     body_id:cp.id
@@ -262,12 +227,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     }
 
                     this.fireEvent("onHide");
-
-                    // Go to home planet.
-                    var home = EmpireRPCStore.getData().home_planet_id;
-                    MapActions.changePlanet(home);
-
-                    require('js/actions/menu/loader').hide();
+                    Game.PlanetJump(); //jumps to home planet if nothing passed in
+                    
+                    Lacuna.Pulser.Hide();
                 },
                 scope:this
             });
@@ -285,12 +247,13 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     success : function(o){
                         YAHOO.log(o, "info", "PlanetaryCommand.Rename.success");
                         if(o.result && planetId) {
-
+                        
                             Dom.get("commandPlanetRenameMessage").innerHTML = ["Successfully renamed your planet from ", Game.EmpireData.planets[planetId].name," to ", newName, '.'].join('');
                             Lib.fadeOutElm("commandPlanetRenameMessage");
                             Dom.get("commandPlanetNewName").value = "";
                             Dom.get("commandPlanetCurrentName").innerHTML = newName;
                             Game.EmpireData.planets[planetId].name = newName;
+                            Lacuna.Menu.update();
 
                             if(Lacuna.MapStar._map) {
                                 Lacuna.MapStar._map.tileCache[cp.x][cp.y].name = newName; // Change the name in the cache
@@ -311,29 +274,15 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 }
             );
         },
-        SaveColonyNotes : function(){
-            var cp = Game.GetCurrentPlanet();
-            var notes = Dom.get("pccNotesText").value;
-            require('js/actions/menu/loader').show();
-            Game.Services.Body.set_colony_notes({
-                session_id: Game.GetSession(""),
-                body_id: cp.id,
-                options: { notes: notes }
-            }, {
-                success : function(o) {
-                    require('js/actions/menu/loader').hide();
-                }
-            });
-        },
         PlanPopulate : function(){
             var div = Dom.get("planDetails");
             if(div) {
                 var divParent = div.parentNode,
                     ul = document.createElement("ul"),
                     li = document.createElement("li");
-
+                    
                 div = divParent.removeChild(div);
-
+                
                 if(this.plans.length > 0) {
                     div.innerHTML = "";
 
@@ -341,24 +290,24 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                         var plan = this.plans[i],
                             nUl = ul.cloneNode(false),
                             nLi = li.cloneNode(false);
-
+                        
                         Dom.addClass(nUl, "plan");
                         Dom.addClass(nUl, "clearafter");
 
                         Dom.addClass(nLi,"planQuan");
-                        nLi.innerHTML = Lib.formatNumber(plan.quantity);
+                        nLi.innerHTML = plan.quantity;
                         nUl.appendChild(nLi);
-
+                        
                         nLi = li.cloneNode(false);
                         Dom.addClass(nLi,"planName");
                         nLi.innerHTML = plan.name;
                         nUl.appendChild(nLi);
-
+                        
                         nLi = li.cloneNode(false);
                         Dom.addClass(nLi,"planLevel");
                         nLi.innerHTML = plan.level;
                         nUl.appendChild(nLi);
-
+                        
                         nLi = li.cloneNode(false);
                         Dom.addClass(nLi,"planExtra");
                         nLi.innerHTML = plan.extra_build_level;
@@ -370,10 +319,10 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 else {
                     div.innerHTML = "No Plans currently available on this planet.";
                 }
-
+                
                 //add child back in
                 divParent.appendChild(div);
-
+                
                 //wait for tab to display first
                 setTimeout(function() {
                     var Ht = Game.GetSize().h - 170;
@@ -384,11 +333,11 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             }
         }
     });
-
+    
     Lacuna.buildings.PlanetaryCommand = PlanetaryCommand;
 
 })();
-YAHOO.register("planetarycommand", YAHOO.lacuna.buildings.PlanetaryCommand, {version: "1", build: "0"});
+YAHOO.register("planetarycommand", YAHOO.lacuna.buildings.PlanetaryCommand, {version: "1", build: "0"}); 
 
 }
 // vim: noet:ts=4:sw=4

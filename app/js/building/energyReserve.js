@@ -76,7 +76,7 @@ if (typeof YAHOO.lacuna.buildings.EnergyReserve == "undefined" || !YAHOO.lacuna.
                     Lib.fadeOutElm("dumpMessage");
                 }
                 else {
-                    require('js/actions/menu/loader').show();
+                    Lacuna.Pulser.Show();
                     this.service.dump({
                         session_id:Game.GetSession(),
                         building_id:this.building.id,
@@ -84,7 +84,7 @@ if (typeof YAHOO.lacuna.buildings.EnergyReserve == "undefined" || !YAHOO.lacuna.
                     }, {
                         success : function(o){
                             YAHOO.log(o, "info", "EnergyReserve.Dump.success");
-                            require('js/actions/menu/loader').hide();
+                            Lacuna.Pulser.Hide();
                             this.rpcSuccess(o);
                             if(this.dumpTab){
                                 var ce = this.dumpTab.get("contentEl");

@@ -78,11 +78,11 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
         },
         getBuild : function() {
             if(!this.ships) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.get_buildable({session_id:Game.GetSession(),building_id:this.building.id}, {
                     success : function(o){
                         YAHOO.log(o, "info", "Shipyard.getBuild.get_buildable.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         this.ships = {
                             buildable: o.result.buildable,
@@ -102,11 +102,11 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
         },
         getQueue : function() {
             if(!this.ship_build_queue) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.view_build_queue({session_id:Game.GetSession(),building_id:this.building.id,page_number:1}, {
                     success : function(o){
                         YAHOO.log(o, "info", "Shipyard.getQueue.view_build_queue.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         this.ship_build_queue = o.result;
                         this.ShipyardDisplay();
@@ -186,7 +186,7 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
             Sel.query("li.shipQueueEach",elLine,true).innerHTML = compTime;
         },
         SubsidizeBuildQueue : function() {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             
             this.service.subsidize_build_queue({
                 session_id:Game.GetSession(),
@@ -194,7 +194,7 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Shipyard.SubsidizeBuildQueue.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
 
                     this.ship_build_queue = undefined;
@@ -272,23 +272,23 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
                         attributes[attributes.length] = '<span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">';
                         attributes[attributes.length] = a.titleCaps('_',' ');
                         attributes[attributes.length] = ': </label>';
-                        attributes[attributes.length] = Lib.formatNumber(ship.attributes[a]);
+                        attributes[attributes.length] = ship.attributes[a];
                         attributes[attributes.length] = '</span> ';
                     }
                     
                     nLi.innerHTML = ['<div class="yui-gb" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:100px;height:100px;" class="shipImage" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',shipName,'.png" style="width:100px;height:100px;" class="shipImage" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:63%">',
                     '        <span class="shipName">',ship.type_human,'</span>: ',
                     '        <div class="shipDesc" style="display:none;">',Game.GetShipDesc(shipName),'</div>',
                     '        <div><label style="font-weight:bold;">Cost:</label>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" />',Lib.formatNumber(ship.cost.food),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" />',Lib.formatNumber(ship.cost.ore),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" />',Lib.formatNumber(ship.cost.water),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" />',Lib.formatNumber(ship.cost.energy),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" />',Lib.formatNumber(ship.cost.waste),'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" />',ship.cost.food,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" />',ship.cost.ore,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" />',ship.cost.water,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" />',ship.cost.energy,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" />',ship.cost.waste,'</span>',
                     '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/time.png" title="Time" class="smallTime" />',Lib.formatTime(ship.cost.seconds),'</span>',
                     '        </div>',
                     '        <div><label style="font-weight:bold;">Attributes:</label>',attributes.join(''),'</div>',
@@ -318,14 +318,14 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
             }
         },
         SubsidizeShip : function() {
-             require('js/actions/menu/loader').show();
+             Lacuna.Pulser.Show();
              this.Self.service.subsidize_ship({args: {
 				    session_id: Game.GetSession(),
                     building_id: this.Self.building.id,
 					ship_id: this.Ship.id
 			 }},{
 					success: function(o) {
-						require('js/actions/menu/loader').hide();
+						Lacuna.Pulser.Hide();
 						this.Self.rpcSuccess(o);
 						this.Item.parentNode.removeChild(this.Item);
 						
@@ -335,7 +335,7 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
         ShipBuild : function(e) {
             var btn = Event.getTarget(e);
             btn.disabled = true;
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             var qty = Dom.get("ship_"+this.Type);
             var use = Lib.getSelectedOptionValue("shipBuildYards");
             this.Self.service.build_ships({
@@ -349,12 +349,11 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
             }, {
                 success : function(o){
                     btn.disabled = false;
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.Self.rpcSuccess(o);
 
-                    //this.Self.ship_build_queue = o.result;
-                    //this.Self.ShipyardDisplay();
-                    YAHOO.lacuna.MapPlanet.RefreshWithData(o);
+                    this.Self.ship_build_queue = o.result;
+                    this.Self.ShipyardDisplay();
                     
                     this.Self.ships.docks_available-=qty.value;
                     if(this.Self.ships.docks_available < 0) {

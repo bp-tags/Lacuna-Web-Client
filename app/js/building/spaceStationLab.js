@@ -105,25 +105,18 @@ if (typeof YAHOO.lacuna.buildings.SpaceStationLab == "undefined" || !YAHOO.lacun
         buildLevels : function(levelCosts) {
             var frag = ['<table id="stationLabLevels" class="buildingStats" cellpadding="0" cellspacing="0"><col width="53" /><colgroup span="6" width="110" />'],
                 planet = Game.GetCurrentPlanet();
-            var buildfield = function(costs,type) {
-                return [
-                        '<td class="',
-                        costs[type] > planet[type+"_stored"] ? 'low-resource' : '',
-                        '" title="', Lib.formatNumber(costs[type]),'">',
-                        Lib.convertNumDisplay(costs[type]),
-                        '</td>'
-                       ].join('');
-            };
+                
             for(var n=0; n<levelCosts.length; n++) {
                 var costs = levelCosts[n];
                 frag[frag.length] = [
                     '<tr><th>', costs.level, ':</th>',
-                    buildfield(costs,'food'),
-                    buildfield(costs,'ore'),
-                    buildfield(costs,'water'),
-                    buildfield(costs,'energy'),
-                    buildfield(costs,'waste'),
+                    '    <td class=',costs.food > planet.food_stored ? 'low-resource' : '','>',costs.food,'</td>',
+                    '    <td class=',costs.ore > planet.ore_stored ? 'low-resource' : '','>',costs.ore,'</td>',
+                    '    <td class=',costs.water > planet.water_stored ? 'low-resource' : '','>',costs.water,'</td>',
+                    '    <td class=',costs.energy > planet.energy_stored ? 'low-resource' : '','>',costs.energy,'</td>',
+                    '    <td>',costs.waste,'</td>',
                     '    <td>',Lib.formatTime(costs.time),'</td>',
+                    //'    <td><input type="radio" name="stationLabSelectLevel" value="',costs.level,'" /></td>',
                     '    <td><button type="button" value="',costs.level,'">Make</button></td>',
                     '</tr>'
                 ].join('');
@@ -178,10 +171,10 @@ if (typeof YAHOO.lacuna.buildings.SpaceStationLab == "undefined" || !YAHOO.lacun
             if(type && level) {
                 matchedEl.disabled = true;
                 
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.make_plan({session_id:Game.GetSession(),building_id:this.building.id, type:type, level:level}, {
                     success : function(o){
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         this.result = o.result;
                         matchedEl.disabled = false;
@@ -198,10 +191,10 @@ if (typeof YAHOO.lacuna.buildings.SpaceStationLab == "undefined" || !YAHOO.lacun
             var btn = Event.getTarget(e);
             btn.disabled = true;
             
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.subsidize_plan({session_id:Game.GetSession(),building_id:this.building.id}, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     this.result = o.result;
                     btn.disabled = false;

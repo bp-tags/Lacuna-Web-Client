@@ -43,7 +43,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
             div.appendChild(subDiv);
 
             Dom.addClass(hUl, "buildQueue buildQueueHeader clearafter");
-            hUl.innerHTML = '<li class="buildQueueRank"># </li><li class="buildQueueName">Building</li><li class="buildQueueLevel">Level</li><li class="buildQueueTime">Time</li><li class="buildQueueCoords">Coordinates</li><li class="buildQueueSubsidy">Subsidy</li><li class="buildQueueAction">Action</li>';
+            hUl.innerHTML = '<li class="buildQueueName">Building</li><li class="buildQueueLevel">Level</li><li class="buildQueueTime">Time</li><li class="buildQueueCoords">Coordinates</li><li class="buildQueueSubsidy">Subsidy</li><li class="buildQueueAction">Action</li>';
             div.appendChild(hUl);
             
             for(var i=0; i<bq.length; i++) {
@@ -53,11 +53,6 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
                 Dom.addClass(nUl, "buildQueue");
                 Dom.addClass(nUl, "clearafter");
 
-                Dom.addClass(nLi,"buildQueueRank");
-                nLi.innerHTML = i+1;
-                nUl.appendChild(nLi);
-
-                nLi = li.cloneNode(false);
                 Dom.addClass(nLi,"buildQueueName");
                 nLi.innerHTML = bqo.name;
                 nUl.appendChild(nLi);
@@ -121,7 +116,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
         },
 
         DevCancelOneBuild : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
 
             this.Self.service.cancel_build({ args: {
                 session_id:Game.GetSession(),
@@ -130,7 +125,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
             }}, {
                 success : function(o) {
                     YAHOO.log(o, "info", "Development.DevCancelOneBuild.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.Self.rpcSuccess(o);
                     if(this.Self.queueTab) {
                         Event.purgeElement(this.Self.queueTab.get("contentEl"));
@@ -144,7 +139,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
         },
 
         DevSubsidizeOneBuild : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
 
             this.Self.service.subsidize_one_build({ args: {
                 session_id:Game.GetSession(),
@@ -153,7 +148,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
             }}, {
                 success : function(o) {
                     YAHOO.log(o, "info", "Development.DevSubsidizeOneBuild.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     var e = Game.EmpireData.essentia*1;
                     Game.EmpireData.essentia = e - o.result.essentia_spent*1;
                     this.Self.rpcSuccess(o);
@@ -171,7 +166,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
 
 
         DevSubsidize : function(e) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             
             this.service.subsidize_build_queue({
                 session_id:Game.GetSession(),
@@ -179,7 +174,7 @@ if (typeof YAHOO.lacuna.buildings.Development == "undefined" || !YAHOO.lacuna.bu
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Development.DevSubsidize.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     var e = Game.EmpireData.essentia*1;
                     Game.EmpireData.essentia = e - o.result.essentia_spent*1;
                     this.rpcSuccess(o);

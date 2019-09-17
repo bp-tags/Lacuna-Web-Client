@@ -77,7 +77,7 @@ if (typeof YAHOO.lacuna.buildings.WaterStorage == "undefined" || !YAHOO.lacuna.b
                     Lib.fadeOutElm("dumpMessage");
                 }
                 else {
-                    require('js/actions/menu/loader').show();
+                    Lacuna.Pulser.Show();
                     this.service.dump({
                         session_id:Game.GetSession(),
                         building_id:this.building.id,
@@ -85,14 +85,14 @@ if (typeof YAHOO.lacuna.buildings.WaterStorage == "undefined" || !YAHOO.lacuna.b
                     }, {
                         success : function(o){
                             YAHOO.log(o, "info", "WaterStorage.Dump.success");
-                            require('js/actions/menu/loader').hide();
+                            Lacuna.Pulser.Hide();
                             this.rpcSuccess(o);
                             if(this.dumpTab){
                                 var ce = this.dumpTab.get("contentEl");
                                 Event.purgeElement(ce);
                                 ce.innerHTML = "";
                                 ce.appendChild(this.DumpGetDisplay(o.result.dump));
-                                Dom.get("dumpMessage").innerHTML = "Successfully converted " + Lib.formatNumber(amount) + " " + type + " to waste.";
+                                Dom.get("dumpMessage").innerHTML = "Successfully converted " + amount + " " + type + " to waste.";
                                 Lib.fadeOutElm("dumpMessage");
                             }
                         },

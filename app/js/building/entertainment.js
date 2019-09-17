@@ -39,10 +39,10 @@ if (typeof YAHOO.lacuna.buildings.Entertainment == "undefined" || !YAHOO.lacuna.
         },
         LotteryView : function(e) {
             if(e.newValue) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.get_lottery_voting_options({session_id:Game.GetSession(),building_id:this.building.id}, {
                     success : function(o){
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         
                         this.LotteryPopulate(o.result.options);
@@ -100,10 +100,10 @@ if (typeof YAHOO.lacuna.buildings.Entertainment == "undefined" || !YAHOO.lacuna.
             Dom.get("entertainmentTotalQuacks").innerHTML = ['There have been a total of ', this.result.ducks_quacked || 0, ' ducks quacked.'].join('');
         },
         Quack : function() {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.duck_quack({session_id:Game.GetSession(),building_id:this.building.id}, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     this.result.ducks_quacked++;
                     this.SetQuacks();

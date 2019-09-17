@@ -50,7 +50,7 @@ if (typeof YAHOO.lacuna.buildings.WasteRecycling == "undefined" || !YAHOO.lacuna
                     this.recycleMessageEl.innerHTML = "Can only recycle waste you have stored.";
                 }
                 else {
-                    require('js/actions/menu/loader').show();
+                    Lacuna.Pulser.Show();
                     
                     this.service.recycle({
                         session_id:Game.GetSession(),
@@ -62,7 +62,7 @@ if (typeof YAHOO.lacuna.buildings.WasteRecycling == "undefined" || !YAHOO.lacuna
                     }, {
                         success : function(o){
                             YAHOO.log(o, "info", "WasteRecycling.Recycle.success");
-                            require('js/actions/menu/loader').hide();
+                            Lacuna.Pulser.Hide();
                             this.rpcSuccess(o);
                             this.work = o.result.building.work;
                             //this.updateBuildingTile(o.result.building);
@@ -76,7 +76,7 @@ if (typeof YAHOO.lacuna.buildings.WasteRecycling == "undefined" || !YAHOO.lacuna
                                 }
                                 else {
                                     ce.appendChild(this.RecycleGetDisplay(o.result.recycle));
-                                    this.recycleMessageEl.innerHTML = "Successfully recycled " + Lib.formatNumber(total) + " waste.";
+                                    this.recycleMessageEl.innerHTML = "Successfully recycled " + total + " waste.";
                                 }
                             }
                         },
@@ -311,14 +311,14 @@ if (typeof YAHOO.lacuna.buildings.WasteRecycling == "undefined" || !YAHOO.lacuna
             this.SetTime();
         },
         RecycleSubsidize : function() {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.subsidize_recycling({
                 session_id:Game.GetSession(),
                 building_id:this.building.id
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "WasteRecycling.RecycleSubsidize.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     
                     this.resetQueue();

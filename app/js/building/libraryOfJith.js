@@ -78,10 +78,10 @@ if (typeof YAHOO.lacuna.buildings.LibraryOfJith == "undefined" || !YAHOO.lacuna.
         },
         
         getSpecies : function(id) {
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             this.service.research_species({session_id:Game.GetSession(),building_id:this.building.id, empire_id:id}, {
                 success : function(o){
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     this.speciesDisplay(o.result.species);
                 },

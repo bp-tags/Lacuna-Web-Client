@@ -30,10 +30,6 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
       for (var i=0; i<zones.length; i++) {
         zoneOptions += '<option value="' + zones[i] + '">' + zones[i] + '</option>';
       }
-      var orbits = [];
-      for (var i=1; i<=8; ++i) {
-          orbits.push('<option value="' + i + '">' + i + '</option>');
-      }
       
       this.tab = new YAHOO.widget.Tab({ label: "Singularity", content: [
         '<div id="bhgContainer">',
@@ -46,7 +42,6 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
         '    <option value="zone">Zone (X|Y)</option>',
         '  </select>',
         '  <span id="bhgTargetSelectText"><input type="text" id="bhgTargetText" /></span>',
-        '  <span id="bhgTargetSelectOrbit" style="display:none;">Orbit: <select id="bhgTargetOrbit"><option value="">None (target the star)</option>',orbits,'</select></span>',
         '  <span id="bhgTargetSelectXY" style="display:none;">',
         '    X:<input size="5" type="text" id="bhgTargetX" />',
         '    Y:<input size="5" type="text" id="bhgTargetY" />',
@@ -84,29 +79,20 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
       }, this, true);
 
       Event.on("bhgTargetType", "change", function(){
-        var selected = Lib.getSelectedOptionValue(this);
-        if(selected == "xy") {
+        if(Lib.getSelectedOptionValue(this) == "xy") {
           Dom.setStyle("bhgTargetSelectText", "display", "none");
           Dom.setStyle("bhgTargetSelectXY", "display", "");
           Dom.setStyle("bhgTargetSelectZone", "display", "none");
-          Dom.setStyle("bhgTargetSelectOrbit", "display", "none");
         }
-        else if(selected == "zone") {
+        else if(Lib.getSelectedOptionValue(this) == "zone") {
           Dom.setStyle("bhgTargetSelectText", "display", "none");
           Dom.setStyle("bhgTargetSelectXY", "display", "none");
           Dom.setStyle("bhgTargetSelectZone", "display", "");
-          Dom.setStyle("bhgTargetSelectOrbit", "display", "none");
         }
         else {
           Dom.setStyle("bhgTargetSelectText", "display", "");
           Dom.setStyle("bhgTargetSelectXY", "display", "none");
           Dom.setStyle("bhgTargetSelectZone", "display", "none");
-          if (selected == "star_name" || selected == "star_id") {
-              Dom.setStyle("bhgTargetSelectOrbit", "display", "");
-          }
-          else {
-              Dom.setStyle("bhgTargetSelectOrbit", "display", "none");
-          }
         }
       });
       Event.on("bhgGetActions", "click", this.bhgGetActions, this, true);
@@ -115,7 +101,7 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
       return this.tab;
     },
     bhgGetActions : function() {
-      require('js/actions/menu/loader').show();
+      Lacuna.Pulser.Show();
       
       Dom.setStyle("bhgActions", "display", "none");
       
@@ -133,7 +119,6 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
       }
       else {
         target[type] = Dom.get("bhgTargetText").value;
-        target.orbit = Dom.get("bhgTargetOrbit").value;
         Dom.get("bhgTargetNote").innerHTML = target[type];
       }
       
@@ -143,7 +128,7 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
         target: target
       }, {
         success : function(o){
-          require('js/actions/menu/loader').hide();
+          Lacuna.Pulser.Hide();
           this.rpcSuccess(o);
           this.PopulateBHGTab(target, o.result.tasks);
         },
@@ -288,7 +273,7 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
         this.Self.service.generate_singularity(
           {params : rpcParams },
           {success : function(o){
-            require('js/actions/menu/loader').hide();
+            Lacuna.Pulser.Hide();
             this.Self.rpcSuccess(o);
             this.Self.PopulateBHGResult(target, o.result.effect);
           },
@@ -416,14 +401,14 @@ if (typeof YAHOO.lacuna.buildings.BlackHoleGenerator == "undefined" ||
       }
     },
 	cooldownSubsidize : function() {
-      require('js/actions/menu/loader').show();
+      Lacuna.Pulser.Show();
       
       this.service.subsidize_cooldown({
         session_id:Game.GetSession(),
         building_id:this.building.id
       }, {
         success : function(o){
-          require('js/actions/menu/loader').hide();
+          Lacuna.Pulser.Hide();
           this.rpcSuccess(o);
 
           delete this.work;
