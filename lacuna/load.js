@@ -36075,7 +36075,7 @@ YAHOO.register("textboxList", YAHOO.lacuna.TextboxList, {version: "1.0.0", build
 // vim: noet:ts=4:sw=4
 
 },{}],"/home/desktop/ResourceUs/app/json/resources.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports={
     "buildings" : {
         "/operahouse" : { "description" : "A source of cultural influence for your space station.", "wiki" : "http://community.lacunaexpanse.com/wiki/opera-house" },
         "/artmuseum" : { "description" : "A source of cultural influence for your space station.", "wiki" : "http://community.lacunaexpanse.com/wiki/art-museum" },
