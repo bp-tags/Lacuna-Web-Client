@@ -8,7 +8,7 @@ light blue: #52ACFF
 @import url('http://fonts.googleapis.com/css?family=Roboto:400,300,500');
 
 html {
-	background: black url('//d16cbq0l6kkf21.cloudfront.net/assets/star_system/field.png');
+	background: black url('//192.168.0.37:8080/assets/star_system/field.png');
 	color:#fff;
 	overflow: hidden;
 }
@@ -43,7 +43,7 @@ button, input[type="submit"], input[type="button"], .button {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #fefefe #dedede #dedede #fefefe;
-	background: #103070 url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/bar_bottom_back.png") 0 -10px;
+	background: #103070 url("//192.168.0.37:8080/assets/ui/web/bar_bottom_back.png") 0 -10px;
 	color: #ffffff;
 }
 button:hover:active, input[type="submit"]:hover:active, input[type="button"]:hover:active, .button:hover:active {
@@ -93,12 +93,12 @@ button[disabled], input[type="submit"][disabled], input[type="button"][disabled]
 #header {
 	top: 0;
 	z-index:1000;
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/bar_top_back.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/bar_top_back.png");
 }
 #footer {
 	bottom: 0;
 	z-index:1000;
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/bar_bottom_back.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/bar_bottom_back.png");
 }
 
 .hidden {
@@ -136,7 +136,7 @@ body.yui-skin-sam .yui-panel {
 }
 body.yui-skin-sam .yui-panel .hd {
 	width:250px;
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/tab.png") no-repeat scroll 0 0 transparent;
+	background:url("//192.168.0.37:8080/assets/ui/tab.png") no-repeat scroll 0 0 transparent;
 	border-width:0;
 	margin-left:10px;
 	font-size:110%;
@@ -145,7 +145,7 @@ body.yui-skin-sam .yui-panel .hd {
 }
 
 .yui-skin-sam .yui-panel .bd, .yui-skin-sam .yui-panel .ft {
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/bkg.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/bkg.png");
 }
 body.yui-skin-sam .yui-panel .bd {
 	-moz-border-radius:10px 10px 0 0;
@@ -174,7 +174,7 @@ body.yui-skin-sam .nofooter .bd {
 	border-color:#000;
 }
 body.yui-skin-sam .container-close {
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll 0 0 transparent;
+	background:url("//192.168.0.37:8080/assets/ui/close.png") no-repeat scroll 0 0 transparent;
 	cursor:pointer;
 	height:23px;
 	position:absolute;
@@ -622,11 +622,11 @@ SHINEY
 	z-index:1001;
 }
 #headerShine {
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/t.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/t.png");
 	top:0;
 }
 #footerShine {
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/t.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/t.png");
 	bottom:0;
 }
 
@@ -639,22 +639,22 @@ SHINEY
 	width:334px;
 }
 #usersCenter {
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_top.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/selector_top.png");
 	top:0;
 	z-index:1003;
 }
 #planetsCenter {
-	background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_bottom.png");
+	background-image:url("//192.168.0.37:8080/assets/ui/web/selector_bottom.png");
 	bottom:0;
 	z-index:1003;
 }
 #userCenterShine {
-	/*background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_top_shine.png");*/
+	/*background-image:url("//192.168.0.37:8080/assets/ui/web/selector_top_shine.png");*/
 	top:0;
 	z-index:1004;
 }
 #planetsCenterShine {
-	/*background-image:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/selector_bottom_shine.png");*/
+	/*background-image:url("//192.168.0.37:8080/assets/ui/web/selector_bottom_shine.png");*/
 	bottom:0;
 	z-index:1004;
 }
@@ -671,7 +671,7 @@ SHINEY
 #usersArrow {
 	width: 100%;
 	height: 100%;
-	background: url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/down.png") no-repeat scroll center 55px transparent;
+	background: url("//192.168.0.37:8080/assets/ui/down.png") no-repeat scroll center 55px transparent;
 	position:absolute;
 	top:0;
 	left:0;
@@ -679,7 +679,7 @@ SHINEY
 #planetsArrow {
 	width: 100%;
 	height: 100%;
-	background: url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/up.png") no-repeat scroll center 10px transparent;
+	background: url("//192.168.0.37:8080/assets/ui/up.png") no-repeat scroll center 10px transparent;
 	position:absolute;
 	top:0;
 	left:0;
@@ -911,7 +911,7 @@ body.yui-skin-sam .yui-pg-container .yui-pg-current-page {
     zoom:1; /*force ie layout so we can use the display:inline below*/
     *display:inline; /*ie hack to make it think this is an inline-block*/
 	position: relative;
-	background: url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/tickbar.png") -11px 5px no-repeat;
+	background: url("//192.168.0.37:8080/assets/ui/tickbar.png") -11px 5px no-repeat;
 	height: 28px;
 	width: 198px;
 	top: 5px;
@@ -1024,14 +1024,14 @@ Info dialogs for Empire and Alliance
 	width:700px;*/
 	border:0 none;
 	clear:both;
-	cursor: url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/openhand.cur), default;
+	cursor: url(//192.168.0.37:8080/assets/ui/web/openhand.cur), default;
 }
 #planetMap .tile:hover {
 	border: 1px dashed #fff;
 	margin: -1px;
 }
 /*#planetMap {
-	background: brown url('//d16cbq0l6kkf21.cloudfront.net/assets/planet_side/ground.png');
+	background: brown url('//192.168.0.37:8080/assets/planet_side/ground.png');
 }*/
 .tile {
 	word-wrap: break-word;
@@ -1121,10 +1121,10 @@ Info dialogs for Empire and Alliance
 	color:white;
 }
 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/build.png');
+	background: transparent url('//192.168.0.37:8080/assets/ui/l/build.png');
 }
 .plots-full .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/build-no.png');
+	background: transparent url('//192.168.0.37:8080/assets/ui/l/build-no.png');
 }
 
 .tileContainer .tile50  div.planetMapTileCounter {
@@ -1147,14 +1147,14 @@ Info dialogs for Empire and Alliance
 	font-size:180%;
 }
 .tile50 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/build.png');
+	background: transparent url('//192.168.0.37:8080/assets/ui/s/build.png');
 }
 .plots-full .tile50 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/build-no.png');
+	background: transparent url('//192.168.0.37:8080/assets/ui/s/build-no.png');
 }
 
 .mapiator_nav {
-	background: url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/zoom.png);
+	background: url(//192.168.0.37:8080/assets/ui/zoom.png);
 	position:absolute;
 	z-index:30;
 	width:60px;
@@ -1192,7 +1192,7 @@ Info dialogs for Empire and Alliance
 	left: 38px;
 }
 .mapiator_zoom {
-	background: url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/zoom.png);
+	background: url(//192.168.0.37:8080/assets/ui/zoom.png);
 	background-position: -20px -60px;
 	position:absolute;
 	z-index:30;
@@ -1739,7 +1739,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	position:relative;
 }
 .stashItem .stashDelete, .tradeItem .tradeDelete, .distribContainers .reserveDelete {
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll center center transparent;
+	background:url("//192.168.0.37:8080/assets/ui/close.png") no-repeat scroll center center transparent;
 	height:11px;
 	width:11px;
 	position: absolute;
@@ -1818,7 +1818,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	cursor:pointer;
 }
 .probeStar .probeDelete {
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll center center transparent;
+	background:url("//192.168.0.37:8080/assets/ui/close.png") no-repeat scroll center center transparent;
 	height:11px;
 	width:11px;
 	position: absolute;
@@ -1849,7 +1849,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	width:100px;
 	font-weight:bold;
 	font-size:100%;
-	cursor:url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/pen_m.cur), text;
+	cursor:url(//192.168.0.37:8080/assets/ui/web/pen_m.cur), text;
 }
 .spyInfo .spyName input {
 	width:95px;
@@ -2384,7 +2384,7 @@ TextboxList
     padding:0 15px 0 2px;
 }
 .TextboxList .TextboxListBitBoxDelete {
-    background:transparent url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/crosssmall.gif) repeat scroll 0 0;
+    background:transparent url(//192.168.0.37:8080/assets/ui/crosssmall.gif) repeat scroll 0 0;
     display:block;
     font-size:1px;
     height:7px;
@@ -2413,7 +2413,7 @@ TextboxList
     top:1px;
     #top:2px;
     position:absolute;
-    background:transparent url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/dropdown.gif) repeat scroll 0 0;
+    background:transparent url(//192.168.0.37:8080/assets/ui/dropdown.gif) repeat scroll 0 0;
     z-index:2;
     display:-moz-inline-stack; /*mozilla 2.0*/
     display:inline-block; /*mozilla 3.0, ie 8*/
