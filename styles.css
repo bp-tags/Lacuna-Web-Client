@@ -1021,7 +1021,7 @@ Info dialogs for Empire and Alliance
 	width:700px;*/
 	border:0 none;
 	clear:both;
-	cursor: url(//192.168.0.3:8000/starmap/assets/ui/web/openhand.cur), default;
+	cursor: url(window.lacuna_s3_base_url+assets/ui/web/openhand.cur), default;
 }
 #planetMap .tile:hover {
 	border: 1px dashed #fff;
@@ -1118,10 +1118,10 @@ Info dialogs for Empire and Alliance
 	color:white;
 }
 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/build.png');
+	background: transparent url(window.lacuna_s3_base_url+'assets/ui/l/build.png');
 }
 .plots-full .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/l/build-no.png');
+	background: transparent url(window.lacuna_s3_base_url+'assets/ui/l/build-no.png');
 }
 
 .tileContainer .tile50  div.planetMapTileCounter {
@@ -1144,14 +1144,14 @@ Info dialogs for Empire and Alliance
 	font-size:180%;
 }
 .tile50 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/build.png');
+	background: transparent url(window.lacuna_s3_base_url+'assets/ui/s/build.png');
 }
 .plots-full .tile50 .planetMapTileActionButton {
-	background: transparent url('//d16cbq0l6kkf21.cloudfront.net/assets/ui/s/build-no.png');
+	background: transparent url(window.lacuna_s3_base_url+'assets/ui/s/build-no.png');
 }
 
 .mapiator_nav {
-	background: url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/zoom.png);
+	background: url(window.lacuna_s3_base_url+assets/ui/zoom.png);
 	position:absolute;
 	z-index:30;
 	width:60px;
@@ -1189,7 +1189,7 @@ Info dialogs for Empire and Alliance
 	left: 38px;
 }
 .mapiator_zoom {
-	background: url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/zoom.png);
+	background: url(window.lacuna_s3_base_url+assets/ui/zoom.png);
 	background-position: -20px -60px;
 	position:absolute;
 	z-index:30;
@@ -1815,7 +1815,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	cursor:pointer;
 }
 .probeStar .probeDelete {
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll center center transparent;
+	background:url(window.lacuna_s3_base_url+"assets/ui/close.png") no-repeat scroll center center transparent;
 	height:11px;
 	width:11px;
 	position: absolute;
@@ -1846,7 +1846,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	width:100px;
 	font-weight:bold;
 	font-size:100%;
-	cursor:url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/web/pen_m.cur), text;
+	cursor:url(window.lacuna_s3_base_url+assets/ui/web/pen_m.cur), text;
 }
 .spyInfo .spyName input {
 	width:95px;
@@ -2381,7 +2381,7 @@ TextboxList
     padding:0 15px 0 2px;
 }
 .TextboxList .TextboxListBitBoxDelete {
-    background:transparent url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/crosssmall.gif) repeat scroll 0 0;
+    background:transparent url(window.lacuna_s3_base_url+assets/ui/crosssmall.gif) repeat scroll 0 0;
     display:block;
     font-size:1px;
     height:7px;
@@ -2410,7 +2410,7 @@ TextboxList
     top:1px;
     #top:2px;
     position:absolute;
-    background:transparent url(//d16cbq0l6kkf21.cloudfront.net/assets/ui/dropdown.gif) repeat scroll 0 0;
+    background:transparent url(window.lacuna_s3_base_url+assets/ui/dropdown.gif) repeat scroll 0 0;
     z-index:2;
     display:-moz-inline-stack; /*mozilla 2.0*/
     display:inline-block; /*mozilla 3.0, ie 8*/
