@@ -1,9 +1,7 @@
 YAHOO.namespace("lacuna.buildings");
 
-var BodyRPCStore = require('js/stores/rpc/body');
-
 if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.buildings.Building) {
-
+    
 (function(){
     var Lang = YAHOO.lang,
         Util = YAHOO.util,
@@ -37,7 +35,7 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         //so we can store just in case anyway
         this.result = oResults;
     };
-
+    
     Building.prototype = {
         destroy : function() {
             this.unsubscribeAll();
@@ -52,21 +50,21 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
             else {
                 var tabs = [this._getProductionTab()],
                     childTabs = this.building.level > 0 ? this.getChildTabs() : null;
-
+                    
                 if(childTabs && Lang.isArray(childTabs)) {
                     tabs = tabs.concat(childTabs);
                 }
-
+                
                 // incoming supply-chains tab
                 if (this.building.url == "/planetarycommand" || this.building.url == "/stationcommand") {
                     tabs[tabs.length] = this._getIncomingSupplyChainsTab();
                 }
-
+                
                 //create storage tab last
                 if(this.building.upgrade.production && ((this.building.food_capacity*1 + this.building.ore_capacity*1 + this.building.water_capacity*1 + this.building.energy_capacity*1 + this.building.waste_capacity*1) > 0)) {
                     tabs[tabs.length] = this._getStorageTab();
                 }
-
+                
                 return tabs;
             }
         },
@@ -74,7 +72,7 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
             //overrideable function for child classes that have their own tabs
             //** Must return nothing or an array of tabs **
         },
-
+        
         /*
         Event Helpers
         */
@@ -92,6 +90,18 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                     this.work = this.building.work;
                     this.updateBuildingTile(this.building);
                 }
+                /*if(o.result.building.id && o.result.building.name) {
+                    delete this.building.work;
+                    delete this.building.pending_build;
+                    Lang.augmentObject(this.building, o.result.building, true);
+                }
+                else if(o.result.building.work) {
+                    this.building.work = o.result.building.work;
+                }
+                this.work = this.building.work;
+                if(workChanged) {
+                    this.updateBuildingTile(this.building);
+                }*/
             }
         },
         addQueue : function(sec, func, elm, sc) {
@@ -115,49 +125,33 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         removeBuildingTile : function(building) {
             this.fireEvent("onRemoveTile", building);
         },
-
-        _details : function(info) {
-            var title = info.title ? info.title : Lib.capitalizeFirstLetter(info.type);
-            var suffix = info.suffix ? info.suffix : '';
-            var id = info.id ? [ 'id="', info.id, '" '].join('') : '';
-            var numclass = ['buildingDetailsNum'];
-            if (info.numclass) {
-                numclass.push(info.numclass);
-            }
-            numclass = numclass.join(' '); // space joiner!
-
-            return [
-                    '<li><span class="smallImg"><img src ="',Lib.AssetUrl,'ui/s/',info.type,'.png" title="',title,'" class="small',title,'" /></span>',
-                    '<span ', id, 'class="', numclass, '" title="', Lib.formatNumber(info.amount), '">',Lib.convertNumDisplay(info.amount),info.suffix,'</span></li>'
-                ].join('');
-        },
-
+        
         _getRepairTab : function() {
             this.repairTab = new YAHOO.widget.Tab({ label: "Repair", content: [
                     '<div id="repairContainer">',
                     '    <span id="repairText">Building is currently running at ',this.building.efficiency,'% efficiency.  Costs to repair the building are:</span>',
                     '    <ul>',
-                    this._details({type:'food',amount:this.building.repair_costs.food}),
-                    this._details({type:'ore',amount:this.building.repair_costs.ore}),
-                    this._details({type:'water',amount:this.building.repair_costs.water}),
-                    this._details({type:'energy',amount:this.building.repair_costs.energy}),
+                    '        <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span class="buildingDetailsNum">',this.building.repair_costs.food,'</span></li>',
+                    '        <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span class="buildingDetailsNum">',this.building.repair_costs.ore,'</span></li>',
+                    '        <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span class="buildingDetailsNum">',this.building.repair_costs.water,'</span></li>',
+                    '        <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span class="buildingDetailsNum">',this.building.repair_costs.energy,'</span></li>',
                     '    </ul>',
                     '    <button id="repairBuilding" type="button">Repair</button>',
                     '</div>'
                 ].join('')});
 
             Event.on("repairBuilding", "click", this.Repair, this, true);
-
+                    
             return this.repairTab;
         },
         Repair : function(e) {
             var btn = Event.getTarget(e);
             btn.disabled = true;
-            require('js/actions/menu/loader').show();
+            Lacuna.Pulser.Show();
             Game.Services.Buildings.Generic.repair({session_id:Game.GetSession(),building_id:this.building.id}, {
                 success : function(o){
                     YAHOO.log(o, "info", "Building.Repair.repair.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.rpcSuccess(o);
                     if(this.repairTab) {
                         Event.removeListener("repair", "click");
@@ -181,24 +175,24 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 scope:this
             });
         },
-
+        
         _getProductionTab : function() {
             var up = this.building.upgrade,
                 down = this.building.downgrade,
                 currentLevel = this.building.level*1,
-                planet = BodyRPCStore.getData();
+                planet = Game.GetCurrentPlanet();
             this.productionTab = new YAHOO.widget.Tab({ label: "Production", content: [
                 '<div id="detailsProduction"><p id="extraBuildingDetails"></p>',
                 '    <div id="buildingDetailsProduction" class="yui-gb">',
                 '        <div class="yui-u first">',
                 '            <ul>',
                 '                <li>Current Production</li>',
-                this._details({type:'food',amount:this.building.food_hour,suffix:'/hr'}),
-                this._details({type:'ore',amount:this.building.ore_hour,suffix:'/hr'}),
-                this._details({type:'water',amount:this.building.water_hour,suffix:'/hr'}),
-                this._details({type:'energy',amount:this.building.energy_hour,suffix:'/hr'}),
-                this._details({type:'waste',amount:this.building.waste_hour,suffix:'/hr'}),
-                this._details({type:'happiness',amount:this.building.happiness_hour,suffix:'/hr'}),
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span id="buildingDetailsFood" class="buildingDetailsNum">',this.building.food_hour,'/hr</span></li>',
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span id="buildingDetailsOre" class="buildingDetailsNum">',this.building.ore_hour,'/hr</span></li>',
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span id="buildingDetailsWater" class="buildingDetailsNum">',this.building.water_hour,'/hr</span></li>',
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span id="buildingDetailsEnergy" class="buildingDetailsNum">',this.building.energy_hour,'/hr</span></li>',
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span><span id="buildingDetailsWaste" class="buildingDetailsNum">',this.building.waste_hour,'/hr</span></li>',
+                '                <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" title="Happiness" class="smallHappy" /></span><span id="buildingDetailsHappiness" class="buildingDetailsNum">',this.building.happiness_hour,'/hr</span></li>',
                 '                <li><button id="buildingDetailsDemolish" type="button">Demolish</button></li>',
                 '            </ul>',
                 '        </div>',
@@ -206,12 +200,12 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 '            <ul id="buildingDetailsUpgradeProduction">',
                 up ? [
                     '<li>Upgrade Production</li>',
-                    this._details({type:'food',amount:up.production.food_hour,suffix:'/hr',numclass:this.building.food_hour - up.production.food_hour > planet.food_hour ? 'low-resource' : null}),
-                    this._details({type:'ore',amount:up.production.ore_hour,suffix:'/hr',numclass:this.building.ore_hour - up.production.ore_hour > planet.ore_hour ? 'low-resource' : null}),
-                    this._details({type:'water',amount:up.production.water_hour,suffix:'/hr',numclass:this.building.water_hour - up.production.water_hour > planet.water_hour ? 'low-resource' : null}),
-                    this._details({type:'energy',amount:up.production.energy_hour,suffix:'/hr',numclass:this.building.energy_hour - up.production.energy_hour > planet.energy_hour ? 'low-resource' : null}),
-                    this._details({type:'waste',amount:up.production.waste_hour,suffix:'/hr'}),
-                    this._details({type:'happiness',amount:up.production.happiness_hour,suffix:'/hr'}),
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span class="buildingDetailsNum',this.building.food_hour - up.production.food_hour > planet.food_hour ? ' low-resource' : '','">',up.production.food_hour,'/hr</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span class="buildingDetailsNum',this.building.ore_hour - up.production.ore_hour > planet.ore_hour ? ' low-resource' : '','">',up.production.ore_hour,'/hr</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span class="buildingDetailsNum',this.building.water_hour - up.production.water_hour > planet.water_hour ? ' low-resource' : '','">',up.production.water_hour,'/hr</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span class="buildingDetailsNum',this.building.energy_hour - up.production.energy_hour > planet.energy_hour ? ' low-resource' : '','">',up.production.energy_hour,'/hr</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span><span class="buildingDetailsNum">',up.production.waste_hour,'/hr</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" title="Happiness" class="smallHappy" /></span><span class="buildingDetailsNum">',up.production.happiness_hour,'/hr</span></li>',
                     up.can ? '<li><button id="buildingDetailsUpgrade" type="button">Upgrade to Level ' + (1 + (this.building.level*1)) + '</button></li>' : '<li class="alert">Unable to Upgrade:</li><li class="alert">',up.reason[1],'</li>'
                     ].join('') : '',
                 '            </ul>',
@@ -220,11 +214,11 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 '            <ul id="buildingDetailsUpgradeCost">',
                 up ? [
                     '    <li>Upgrade Cost</li>',
-                    this._details({type:'food',amount:up.cost.food||0,numclass:up.cost.food > planet.food_stored ? 'low-resource' : null}),
-                    this._details({type:'ore',amount:up.cost.ore||0,numclass:up.cost.ore > planet.ore_stored ? 'low-resource' : null}),
-                    this._details({type:'water',amount:up.cost.water||0,numclass:up.cost.water > planet.water_stored ? 'low-resource' : null}),
-                    this._details({type:'energy',amount:up.cost.energy||0,numclass:up.cost.energy > planet.energy_stored ? 'low-resource' : null}),
-                    this._details({type:'waste',amount:up.cost.waste||0}),
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span class="buildingDetailsNum',up.cost.food > planet.food_stored ? ' low-resource' : '','">',up.cost.food,'</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span class="buildingDetailsNum',up.cost.ore > planet.ore_stored ? ' low-resource' : '','">',up.cost.ore,'</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span class="buildingDetailsNum',up.cost.water > planet.water_stored ? ' low-resource' : '','">',up.cost.water,'</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span class="buildingDetailsNum',up.cost.energy > planet.energy_stored ? ' low-resource' : '','">',up.cost.energy,'</span></li>',
+                    '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span><span class="buildingDetailsNum">',up.cost.waste,'</span></li>',
                     '    <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/time.png" title="Time" class="smallTime" /></span><span class="buildingDetailsNum">',Lib.formatTime(up.cost.time),'</span></li>'
                     ].join('') : '',
                 currentLevel <= 1 ? '' : down.can ? '<li><button id="buildingDetailsDowngrade" type="button">Downgrade to Level ' + (currentLevel - 1) + '</button></li>' : '<li class="alert">Unable to Downgrade:</li><li class="alert">' + String(down.reason).replace(/^\d+,\s*/, '') + '</li>',
@@ -233,13 +227,13 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 '    </div>',
                 '</div>'
                 ].join('')});
-
+            
             Event.onAvailable('extraBuildingDetails', function(o) {
                 if (o.building.upgrade.cost.halls && (parseInt(o.building.level)) < 30) {
                     Dom.get('extraBuildingDetails').innerHTML = 'Upgrade to level ' + (parseInt(o.building.level) + 1) + ' by sacrificing ' + (parseInt(o.building.level) + 1) + ' Halls of Vrbansk.';
                 }
             }, this);
-
+            
             Event.on("buildingDetailsDemolish", "click", this.Demolish, this, true);
             if(up.can) {
                 Event.on("buildingDetailsUpgrade", "click", this.Upgrade, this, true);
@@ -247,24 +241,24 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
             if(currentLevel > 1) {
                 Event.on("buildingDetailsDowngrade", "click", this.Downgrade, this, true);
             }
-
+            
             return this.productionTab;
 
         },
         Demolish : function() {
             var building = this.building;
             if(confirm(['Are you sure you want to Demolish the level ',building.level,' ',building.name,'?'].join(''))) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 Game.Services.Buildings.Generic.demolish({
                     session_id:Game.GetSession(),
                     building_id:building.id
                 }, {
                     success : function(o){
                         YAHOO.log(o, "info", "Building.Demolish.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         this.removeBuildingTile(building);
-                        this.fireEvent("onHide");
+                        this.fireEvent("onHide");                    
                     },
                     scope:this,
                     target:building.url
@@ -274,25 +268,25 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         Downgrade : function() {
             var building = this.building;
             if(confirm(['Are you sure you want to downgrade the level ',building.level,' ',building.name,'?'].join(''))) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 Game.Services.Buildings.Generic.downgrade({
                     session_id:Game.GetSession(),
                     building_id:building.id
                 }, {
                     success : function(o){
                         YAHOO.log(o, "info", "Building.Downgrade.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.fireEvent("onMapRpc", o.result);
-
+                        
                         var b = building; //originally passed in building data from currentBuilding
                         b.id = o.result.building.id;
                         b.level = o.result.building.level;
                         b.pending_build = o.result.building.pending_build;
                         YAHOO.log(b, "info", "Building.Upgrade.success.building");
-
+                        
                         this.updateBuildingTile(b);
-
-                        this.fireEvent("onHide");
+                    
+                        this.fireEvent("onHide");                    
                     },
                     scope:this,
                     target:building.url
@@ -301,20 +295,20 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         },
         Upgrade : function() {
             var building = this.building;
-
-            require('js/actions/menu/loader').show();
+            
+            Lacuna.Pulser.Show();
             var BuildingServ = Game.Services.Buildings.Generic,
                 data = {
                     session_id: Game.GetSession(""),
                     building_id: building.id
                 };
-
+        
             BuildingServ.upgrade(data,{
                 success : function(o){
                     YAHOO.log(o, "info", "Building.Upgrade.success");
-                    require('js/actions/menu/loader').hide();
+                    Lacuna.Pulser.Hide();
                     this.fireEvent("onMapRpc", o.result);
-
+                
                     var b = building; //originally passed in building data from currentBuilding
                     b.id = o.result.building.id;
                     b.level = o.result.building.level;
@@ -327,8 +321,8 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 target:building.url
             });
         },
-
-        _getIncomingSupplyChainsTab : function() {
+        
+        _getIncomingSupplyChainsTab : function() {            
             this.incomingSupplyChainTab = new YAHOO.widget.Tab({ label: "Supply Chains", content: [
                 '<div id="incomingSupplyChainInfo" style="margin-bottom: 2px">',
                 '   <div id="incomingSupplyChainList">',
@@ -344,7 +338,7 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 '   <div id="incomingSupplyChainListNone"><b>No Incoming Supply Chains</b></div>',
                 '</div>',
             ].join('')});
-
+            
             this.incomingSupplyChainTab.subscribe("activeChange", this.viewIncomingSupplyChainInfo, this, true);
 
             return this.incomingSupplyChainTab;
@@ -352,16 +346,16 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         viewIncomingSupplyChainInfo : function(e) {
             Dom.setStyle("incomingSupplyChainList", "display", "none");
             Dom.setStyle("incomingSupplyChainListNone", "display", "none");
-
+            
             if ( !this.incoming_supply_chains ) {
-                require('js/actions/menu/loader').show();
+                Lacuna.Pulser.Show();
                 this.service.view_incoming_supply_chains({session_id:Game.GetSession(),building_id:this.building.id}, {
                     success : function(o){
                         YAHOO.log(o, "info", "building.viewIncomingSupplyChainInfo.success");
-                        require('js/actions/menu/loader').hide();
+                        Lacuna.Pulser.Hide();
                         this.rpcSuccess(o);
                         this.incoming_supply_chains = o.result.supply_chains;
-
+                        
                         this.incomingSupplyChainList();
                     },
                     scope:this
@@ -373,7 +367,7 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         },
         incomingSupplyChainList : function() {
           var supply_chains = this.incoming_supply_chains;
-
+          
           if ( supply_chains.length == 0 ) {
             Dom.setStyle("incomingSupplyChainList", "display", "none");
             Dom.setStyle("incomingSupplyChainListNone", "display", "");
@@ -383,27 +377,27 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
             Dom.setStyle("incomingSupplyChainList", "display", "");
             Dom.setStyle("incomingSupplyChainListNone", "display", "none");
           }
-
+          
           var details = Dom.get("incomingSupplyChainListDetails"),
               detailsParent = details.parentNode,
               ul = document.createElement("ul"),
               li = document.createElement("li");
-
+          
           // chains list
           Event.purgeElement(details, true); //clear any events before we remove
           details = detailsParent.removeChild(details); //remove from DOM to make this faster
           details.innerHTML = "";
-
+          
           //Dom.setStyle(detailsParent, "display", "");
           detailsParent.appendChild(details); //add back as child
-
+          
           for (var i=0; i<supply_chains.length; i++) {
             var chain = supply_chains[i],
                 nUl = ul.cloneNode(false);
-
+            
             Dom.addClass(nUl, "incomingSupplyChainInfo");
             Dom.addClass(nUl, "clearafter");
-
+            
             nLi = li.cloneNode(false);
             Dom.addClass(nLi, "incomingSupplyChainBody");
             if (chain.stalled == 1) {
@@ -414,26 +408,25 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
                 nLi.innerHTML = chain.from_body.name;
             }
             nUl.appendChild(nLi);
-
+            
             nLi = li.cloneNode(false);
             Dom.addClass(nLi, "incomingSupplyChainResource");
             nLi.innerHTML = chain.resource_type.titleCaps();
             nUl.appendChild(nLi);
-
+            
             nLi = li.cloneNode(false);
             Dom.addClass(nLi, "incomingSupplyChainHour");
-            nLi.innerHTML = Lib.convertNumDisplay(chain.resource_hour);
-            nLi.title = Lib.formatNumber(chain.resource_hour);
+            nLi.innerHTML = chain.resource_hour;
             nUl.appendChild(nLi);
-
+            
             nLi = li.cloneNode(false);
             Dom.addClass(nLi,"incomingSupplyChainEfficiency");
             nLi.innerHTML = chain.percent_transferred;
             nUl.appendChild(nLi);
-
+            
             details.appendChild(nUl);
           }
-
+          
           //wait for tab to display first
           setTimeout(function() {
             var Ht = Game.GetSize().h - 250;
@@ -442,28 +435,28 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
             Dom.setStyle(detailsParent,"overflow-y","auto");
           },10);
         },
-        _getStorageTab : function() {
+        _getStorageTab : function() {            
             var p = this.building.upgrade.production,
                 output = [
                 '<div class="yui-g">',
                 '    <div class="yui-u first">',
                 '        <ul>',
                 '            <li>Current Building Storage</li>',
-                this._details({type:'food',amount:this.building.food_capacity}),
-                this._details({type:'ore',amount:this.building.ore_capacity}),
-                this._details({type:'water',amount:this.building.water_capacity}),
-                this._details({type:'energy',amount:this.building.energy_capacity}),
-                this._details({type:'waste',amount:this.building.waste_capacity}),
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span class="buildingDetailsNum">',this.building.food_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span class="buildingDetailsNum">',this.building.ore_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span class="buildingDetailsNum">',this.building.water_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span class="buildingDetailsNum">',this.building.energy_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span><span class="buildingDetailsNum">',this.building.waste_capacity,'</span></li>',
                 '        </ul>',
                 '    </div>',
                 '    <div class="yui-u">',
                 '        <ul id="buildingDetailsUpgradeStorage">',
                 '            <li>Upgrade to Building Storage</li>',
-                this._details({type:'food',amount:p.food_capacity}),
-                this._details({type:'ore',amount:p.ore_capacity}),
-                this._details({type:'water',amount:p.water_capacity}),
-                this._details({type:'energy',amount:p.energy_capacity}),
-                this._details({type:'waste',amount:p.waste_capacity}),
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span><span class="buildingDetailsNum">',p.food_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span><span class="buildingDetailsNum">',p.ore_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span><span class="buildingDetailsNum">',p.water_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span><span class="buildingDetailsNum">',p.energy_capacity,'</span></li>',
+                '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span><span class="buildingDetailsNum">',p.waste_capacity,'</span></li>',
                 '        </ul>',
                 '    </div>',
                 '</div>'];
@@ -471,11 +464,11 @@ if (typeof YAHOO.lacuna.buildings.Building == "undefined" || !YAHOO.lacuna.build
         }
     };
     Lang.augmentProto(Building, Util.EventProvider);
-
+    
     YAHOO.lacuna.buildings.Building = Building;
 
 })();
-YAHOO.register("building", YAHOO.lacuna.buildings.Building, {version: "1", build: "0"});
+YAHOO.register("building", YAHOO.lacuna.buildings.Building, {version: "1", build: "0"}); 
 
 }
 // vim: noet:ts=4:sw=4
