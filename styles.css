@@ -1736,7 +1736,7 @@ div.archaeologyGlyphContainer div.archaeologyGlyphHeader {
 	position:relative;
 }
 .stashItem .stashDelete, .tradeItem .tradeDelete, .distribContainers .reserveDelete {
-	background:url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll center center transparent;
+	background:url(window.lacuna_s3_base_url+"assets/ui/close.png") no-repeat scroll center center transparent;
 	height:11px;
 	width:11px;
 	position: absolute;
